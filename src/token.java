@@ -1,17 +1,17 @@
 public class token {
-    tokenList token;
+    TokenList token;
     String value;
 
-    public token(tokenList token, String value) {
+    public token(TokenList token, String value) {
         this.token = token;
         this.value = value;
     }
 
-    public tokenList getToken() {
+    public TokenList getToken() {
         return token;
     }
 
-    public void setToken(tokenList token) {
+    public void setToken(TokenList token) {
         this.token = token;
     }
 

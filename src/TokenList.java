@@ -1,4 +1,4 @@
-enum tokenList{//if u want to add a keyword,an operator or whatever state it before u create it.eg KEYWORD_INT ,not just INT
+enum TokenList {//if u want to add a keyword,an operator or whatever state it before u create it.eg KEYWORD_INT ,not just INT
     KEYWORD_INT,
     KEYWORD_RETURN,
     IDENTIFIER,
