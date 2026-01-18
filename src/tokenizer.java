@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.Locale;//HUH????
 import java.util.Map;
 
-public class tokenizer {
+public class tokenizer {//TODO ADD VALUES TO TOKENS THAT ARE RETURNED
     String code;
 
     token current_token;

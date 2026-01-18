@@ -31,12 +31,41 @@ public class Parser {
 //    private AstStatement ParseReturn(){
 //        //TODO
 //    }
+    private AstStatement ParseIfStatement(){//throw execptions
+        this.CurrentToken++;
+        if(checkIfCurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
+            //TODO throw syntax error
+        }
+        AstExpression Condition = ParseExpression();
+        if(checkIfCurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
+            //TODO throw syntax error
+        }
+        AstCodeBlock TrueBlock =ParseCodeBlock();
+
+        return new AstIfStatement(Condition,TrueBlock);
+    }
+
+    private AstCodeBlock ParseCodeBlock(){//should get the token that is the first { and return when encountering } and change the current pointer so it is one token after the end of the codeblock(main parser should have the same behavior)
+        ArrayList<AstStatement> Statements = new ArrayList<AstStatement>();
+        while(!checkIfCurrentTokenIsEqualTo(TokenList.CLOSING_BRACKET)){
+            Statements.add(ParseStatement());
+        }
+        CurrentToken++;
+        return new AstCodeBlock(Statements);
+    }
+    private AstExpression ParseExpression(){//should parse an expression and change the current token pointer so it is one token after the last token of the expression
+        //TODO implement
+    }
     private AstStatement ParseComment(){
         this.next();
         return null;
     }
 
 
+    /////////////////////////////////////////////////////////////helper functions
+    private boolean checkIfCurrentTokenIsEqualTo(TokenList token){
+        return this.Tokens.get(this.CurrentToken).token==token;
+    }
 
 
 }
