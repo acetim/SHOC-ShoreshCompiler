@@ -7,7 +7,7 @@ enum TokenList{//if u want to add a keyword,an operator or whatever state it bef
     OPERATOR_MINUS,
     OPERATOR_DEVIDES,
     OPERATOR_MULTIPLIE,
-    OPERATOR_EQUALS,
+    OPERATOR_EQUALS,//not an expression op need to add ==
     OPERATOR_NOTEQUALS,
     OPERATOR_GREATERTHEN,
     OPERATOR_SMALLERTHEN,
@@ -24,6 +24,7 @@ enum TokenList{//if u want to add a keyword,an operator or whatever state it bef
 }
 
 public class token {
+    public static TokenList[] operators={TokenList.OPERATOR_PLUS, TokenList.OPERATOR_MINUS, TokenList.OPERATOR_DEVIDES, TokenList.OPERATOR_MULTIPLIE,TokenList.OPERATOR_NOTEQUALS, TokenList.OPERATOR_GREATERTHEN, TokenList.OPERATOR_SMALLERTHEN};
     TokenList token;
     String value;
 

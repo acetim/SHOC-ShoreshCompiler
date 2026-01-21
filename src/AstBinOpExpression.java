@@ -1,34 +1,39 @@
 public class AstBinOpExpression extends AstExpression{ //BINARY ONLY EXPRESSION SYSTEM!!
-    private AstBinOpExpression left;
-    private AstBinOpExpression right;
+    private AstExpression left;
+    private AstExpression right;
+    private TokenList operation;
 
 
-    public AstBinOpExpression() {
+
+    public AstBinOpExpression(AstExpression left, AstExpression right,TokenList op) {
         super("");
-        this.right = null;
-        this.left = null;
-    }
-
-    public AstBinOpExpression(String value, AstBinOpExpression left, AstBinOpExpression right) {
-        super(value);
         this.left = left;
         this.right = right;
+        this.operation =op;
     }
 
-    public AstBinOpExpression getRight() {
+    public TokenList getOperation() {
+        return operation;
+    }
+
+    public void setOperation(TokenList operation) {
+        this.operation = operation;
+    }
+
+    public AstExpression getRight() {
         return right;
     }
 
-    public void setRight(AstBinOpExpression right) {
+    public void setRight(AstExpression right) {
         this.right = right;
     }
 
 
-    public AstBinOpExpression getLeft() {
+    public AstExpression getLeft() {
         return left;
     }
 
-    public void setLeft(AstBinOpExpression left) {
+    public void setLeft(AstExpression left) {
         this.left = left;
     }
 }

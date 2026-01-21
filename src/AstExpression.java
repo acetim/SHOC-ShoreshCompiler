@@ -1,5 +1,5 @@
 public class AstExpression extends AstElement{
-    private String Value;
+    private String value;
 
     public AstExpression(String value) {
         Value = value;
