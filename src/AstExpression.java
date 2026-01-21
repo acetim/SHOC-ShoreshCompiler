@@ -2,14 +2,14 @@ public class AstExpression extends AstElement{
     private String value;
 
     public AstExpression(String value) {
-        Value = value;
+        this.value = value;
     }
 
     public String getValue() {
-        return Value;
+        return value;
     }
 
     public void setValue(String value) {
-        Value = value;
+        value = value;
     }
 }
