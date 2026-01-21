@@ -3,11 +3,11 @@ import java.util.HashMap;
 public class Parser {
     private final ArrayList<token> Tokens;
     private int CurrentToken;
-    private HashMap<TokenList,BindingPower> BindingPowers;
-
+    private final HashMap<TokenList,BindingPower> BindingPowers;
     public Parser(ArrayList<token> tokens) {
         this.Tokens = tokens;
         this.CurrentToken = 0;
+        this.BindingPowers=new HashMap<>();
         //////////////////////////////////////////////MODIFY THIS AND operators IN TOKEN CLASS TO ADD/REMOVE OPERATORS IN THE PARSER
         this.BindingPowers.put(TokenList.OPERATOR_PLUS,new BindingPower(1.0,1.1));
         this.BindingPowers.put(TokenList.OPERATOR_MINUS,new BindingPower(1.0,1.1));
@@ -20,7 +20,7 @@ public class Parser {
         switch(this.Tokens.get(CurrentToken).token)
         {
             case TokenList.KEYWORD_INT:
-                //return this.ParseIntDecleration();
+                //return this.ParseIntDeclaration();
             case TokenList.KEYWORD_EXIT:
                 return this.ParseExit();
             case TokenList.COMMENT:
@@ -29,7 +29,7 @@ public class Parser {
         }
     }
 
-//    private AstStatement ParseIntDecleration(){
+//    private AstStatement ParseIntDeclaration(){
 //
 //
 //    }
@@ -47,7 +47,7 @@ public class Parser {
 
     }
 
-    private AstStatement ParseIfStatement(){//throw execptions
+    private AstStatement ParseIfStatement(){//throw exceptions
         this.CurrentToken++;
         if(checkIfCurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
             //TODO throw syntax error
@@ -63,12 +63,12 @@ public class Parser {
         return new AstIfStatement(Condition,TrueBlock);
     }
 
-    private AstCodeBlock ParseCodeBlock(){//should get the token that is the first { and return when encountering } and change the current pointer so it is one token after the end of the codeblock(main parser should have the same behavior)
+    private AstCodeBlock ParseCodeBlock(){//should get the token that is the first { and return when encountering } and change the current pointer so it is one token after the end of the code block(main parser should have the same behavior)
 
         if(checkIfCurrentTokenIsEqualTo(TokenList.OPENING_BRACKET)){
             //TODO throw syntax error
         }
-        ArrayList<AstStatement> Statements = new ArrayList<AstStatement>();
+        ArrayList<AstStatement> Statements = new ArrayList<>();
         while(!checkIfCurrentTokenIsEqualTo(TokenList.CLOSING_BRACKET)){
             Statements.add(ParseStatement());
         }
