@@ -1,12 +1,19 @@
 import java.util.ArrayList;
-
+import java.util.HashMap;
 public class Parser {
     private ArrayList<token> Tokens;
     private int CurrentToken;
+    private HashMap<TokenList,BindingPower> BindingPowers;
 
     public Parser(ArrayList<token> tokens) {
         this.Tokens = tokens;
         this.CurrentToken = 0;
+        /////////////////////////////////////////////////////////////////////////////////////////MODIFY THIS TO ADD/REMOVE OPERATORS IN THE PARSER
+        this.BindingPowers.put(TokenList.OPERATOR_PLUS,new BindingPower(1.0,1.1));
+        this.BindingPowers.put(TokenList.OPERATOR_MINUS,new BindingPower(1.0,1.1));
+        this.BindingPowers.put(TokenList.OPERATOR_MULTIPLIE,new BindingPower(2.0,2.1));
+        this.BindingPowers.put(TokenList.OPERATOR_DEVIDES,new BindingPower(2.0,2.1));
+        /////////////////////////////////////////////////////////////////////////////////////////MODIFY THIS TO ADD/REMOVE OPERATORS IN THE PARSER
     }
     private void next(){
         this.CurrentToken++;

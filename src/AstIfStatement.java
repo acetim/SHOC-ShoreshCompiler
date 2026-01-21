@@ -2,7 +2,7 @@ public class AstIfStatement extends AstStatement{
     private AstExpression condition;
     private AstCodeBlock trueBlock;
 
-    public AstIfStatement( AstExpression condition, AstCodeBlock trueBlock) {
+    public AstIfStatement(AstExpression condition, AstCodeBlock trueBlock) {
         super(TokenList.KEYWORD_IF);
         this.condition = condition;
         this.trueBlock = trueBlock;

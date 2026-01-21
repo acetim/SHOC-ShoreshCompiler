@@ -1,22 +1,8 @@
-public class AstExpression extends AstElement{ //BINARY ONLY EXPRESSION SYSTEM!!
+public class AstExpression extends AstElement{
     private String Value;
-    private AstExpression left;
-    private AstExpression right;
 
-
-    public AstExpression() {
-        Value = "";
-        this.right = null;
-        this.left = null;
-    }
-
-
-    public AstExpression getRight() {
-        return right;
-    }
-
-    public void setRight(AstExpression right) {
-        this.right = right;
+    public AstExpression(String value) {
+        Value = value;
     }
 
     public String getValue() {
@@ -25,13 +11,5 @@ public class AstExpression extends AstElement{ //BINARY ONLY EXPRESSION SYSTEM!!
 
     public void setValue(String value) {
         Value = value;
-    }
-
-    public AstExpression getLeft() {
-        return left;
-    }
-
-    public void setLeft(AstExpression left) {
-        this.left = left;
     }
 }

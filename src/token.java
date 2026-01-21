@@ -17,8 +17,9 @@ enum TokenList{//if u want to add a keyword,an operator or whatever state it bef
     KEYWORD_IF,
     OPENING_BRACKET,
     CLOSING_BRACKET,
-    OPENING_ROUND_BRACKET,
-    CLOSING_ROUND_BRACKET
+    OPENING_ROUND_BRACKET,//add to tokenizer
+    CLOSING_ROUND_BRACKET,//add to tokenizer
+    KEYWORD_WHILE//add to tokenizer
 
 }
 
