@@ -136,7 +136,7 @@ public class tokenizer {//TODO ADD VALUES TO TOKENS THAT ARE RETURNED
 
         return list;
     }
-
+//TODO WHAT THE FUCKKK SNIR FIX THIS SHIT, YOU NEED TO MAKE A FUNC THAT TAKES THE AND MANUALY ASSIGNS A TOKEN FITTING THE KEYWORD
     private TokenList checkIfKeyWord(String word){//checks if a given word is a keyWord,and returns the keyWord in case it is
         String newWord=word.toUpperCase();//enum strings are built of capitalized letters
 
