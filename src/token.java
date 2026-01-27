@@ -1,4 +1,4 @@
-
+import java.util.Set;
 enum TokenList{//if u want to add a keyword,an operator or whatever state it before u create it.eg KEYWORD_INT ,not just INT
     KEYWORD_INT,
     KEYWORD_EXIT,//exit
@@ -24,7 +24,10 @@ enum TokenList{//if u want to add a keyword,an operator or whatever state it bef
 }
 
 public class token {
-    public static TokenList[] operators={TokenList.OPERATOR_PLUS, TokenList.OPERATOR_MINUS, TokenList.OPERATOR_DEVIDES, TokenList.OPERATOR_MULTIPLIE,TokenList.OPERATOR_NOTEQUALS, TokenList.OPERATOR_GREATERTHEN, TokenList.OPERATOR_SMALLERTHEN};
+    //optimize this
+    public static Set<TokenList> operators=Set.of(TokenList.OPERATOR_PLUS, TokenList.OPERATOR_MINUS, TokenList.OPERATOR_DEVIDES, TokenList.OPERATOR_MULTIPLIE,TokenList.OPERATOR_NOTEQUALS, TokenList.OPERATOR_GREATERTHEN, TokenList.OPERATOR_SMALLERTHEN);
+    public static Set<TokenList> statements=Set.of(TokenList.KEYWORD_INT,TokenList.KEYWORD_EXIT,TokenList.KEYWORD_IF,TokenList.KEYWORD_WHILE);
+
     TokenList token;
     String value;
 
