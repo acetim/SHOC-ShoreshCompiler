@@ -20,26 +20,27 @@ public class Parser {
         //////////////////////////////////////////////MODIFY THIS AND operators IN TOKEN CLASS TO ADD/REMOVE OPERATORS IN THE PARSER
 
     }
-    /*
-    handle ParserExceptions in the parse loop, print "entering panic mode" and at the end of parsing display all errors
-    throw exceptions using reportError()
-
-    when implementing the parse loop increment this.currentToken manually after each
-    parse loop takes and handles end condition
-     */
-
-
-
-    /*
-     TODO-RE MONITOR FLOW OF STATEMENT BLOCKS TO ENFORCE THEY END AT THE LAST TOKEN AND ASSUME
-     */
 
 
     ///////////////////////////////////////////////////////////////ParserAPI
-    private void ParseLoop(boolean IsNestedParse) throws EofException{
+    public void Parse(){
+        try {
+            ParseLoop(false,this.allStatements);
+            if(this.errorHandler.errorArePresent()){
+                this.PrintSyntaxErrors();
+                //TODO call system exit
+            }
+        }catch(EofException e){
+            System.err.println("!EOF ERROR!");
+            this.PrintSyntaxErrors();
+            //TODO call system exit
+        }
+    }
+
+    private void ParseLoop(boolean IsNestedParse,ArrayList<AstStatement> Statements) throws EofException{
         while(this.CurrentToken<this.Tokens.size()){
             try {
-                this.allStatements.add(ParseStatement());
+                Statements.add(ParseStatement());
                 this.CurrentToken++;
                 if (IsNestedParse && this.getCurrentToken() == TokenList.CLOSING_BRACKET) {
                     return;
@@ -61,14 +62,33 @@ public class Parser {
     private AstStatement ParseStatement () throws ParserException,EofException{// returns null on comment statement !! HANDLE THIS !!
         switch(this.Tokens.get(CurrentToken).token)
         {
-            case TokenList.KEYWORD_INT:
-                //return this.ParseIntDeclaration();
+
             case TokenList.KEYWORD_EXIT:
                 return this.ParseExit();
-//            case TokenList.COMMENT:
-//               return this.ParseComment();
+            case TokenList.KEYWORD_IF:
+                return this.ParseIfStatement();
+            default:
+                this.errorHandler.reportError("unexpected token detected");
+                return null;
 
         }
+    }
+
+    private AstStatement ParseWhileStatement() throws ParserException,EofException{
+        this.next();
+        if(checkIfCurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
+            this.errorHandler.reportError("expected '(' at while statement");
+        }
+        this.next();
+        AstExpression Condition = ParseExpression();
+        this.next();
+        if(checkIfCurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
+            this.errorHandler.reportError("expected ')' at while statement");
+        }
+        this.next();
+        AstCodeBlock CodeBlock =ParseCodeBlock();
+
+        return new AstWhileStatement(Condition,CodeBlock);
     }
 
     private AstStatement ParseExit() throws ParserException,EofException{
@@ -201,13 +221,20 @@ public class Parser {
 
 
 
-    ///////////////////////////////////////////////////////////sync
+    ///////////////////////////////////////////////////////////panic mode
     private void Sync()throws EofException{
         do {
             this.next();//skip until a new statement is detected
         } while (!token.statements.contains(getCurrentToken()));
     }
-    ///////////////////////////////////////////////////////////sync
+
+    private void PrintSyntaxErrors(){
+        System.err.println("!SYNTAX ERRORS DETECTED!");
+        for(String s:this.errorHandler.getErrors()){
+            System.err.println(s);
+        }
+    }
+    ///////////////////////////////////////////////////////////panic mode
 }
 
 
