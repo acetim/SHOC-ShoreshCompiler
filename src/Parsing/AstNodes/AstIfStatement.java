@@ -1,3 +1,7 @@
+package Parsing.AstNodes;
+
+import Tokenization.TokenList;
+
 public class AstIfStatement extends AstStatement{
     private AstExpression condition;
     private AstCodeBlock trueBlock;

@@ -1,3 +1,7 @@
+package Parsing;
+
+import Exceptions.ParserException;
+
 import java.util.ArrayList;
 
 public class ParserErrorHandler {

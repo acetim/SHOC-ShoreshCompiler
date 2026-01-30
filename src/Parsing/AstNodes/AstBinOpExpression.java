@@ -1,3 +1,7 @@
+package Parsing.AstNodes;
+
+import Tokenization.TokenList;
+
 public class AstBinOpExpression extends AstExpression{ //BINARY ONLY EXPRESSION SYSTEM!!
     private AstExpression left;
     private AstExpression right;

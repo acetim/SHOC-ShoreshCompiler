@@ -1,4 +1,6 @@
-import java.util.ArrayList;
+package Parsing.AstNodes;
+
+import Tokenization.TokenList;
 
 public class AstStatement extends AstElement{
     private TokenList StatementType;

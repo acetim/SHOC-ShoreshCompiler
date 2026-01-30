@@ -1,3 +1,11 @@
+package Parsing;
+
+import Exceptions.EofException;
+import Exceptions.ParserException;
+import Parsing.AstNodes.*;
+import Tokenization.TokenList;
+import Tokenization.token;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 public class Parser {
@@ -60,7 +68,7 @@ public class Parser {
 
     ///////////////////////////////////////////////////////////////PARSE FUNCTIONS
     private AstStatement ParseStatement () throws ParserException,EofException{// returns null on comment statement !! HANDLE THIS !!
-        switch(this.Tokens.get(CurrentToken).token)
+        switch(this.Tokens.get(CurrentToken).getToken())
         {
 
             case TokenList.KEYWORD_EXIT:
@@ -68,7 +76,7 @@ public class Parser {
             case TokenList.KEYWORD_IF:
                 return this.ParseIfStatement();
             default:
-                this.errorHandler.reportError("unexpected token detected");
+                this.errorHandler.reportError("unexpected Tokenization.token detected");
                 return null;
 
         }
@@ -123,7 +131,7 @@ public class Parser {
         return new AstIfStatement(Condition,TrueBlock);
     }
 
-    private AstCodeBlock ParseCodeBlock() throws ParserException {//should get the token that is the first { and return when encountering } and change the current pointer so it is one token after the end of the code block(main parser should have the same behavior)
+    private AstCodeBlock ParseCodeBlock() throws ParserException {//should get the Tokenization.token that is the first { and return when encountering } and change the current pointer so it is one Tokenization.token after the end of the code block(main parser should have the same behavior)
 
         if(checkIfCurrentTokenIsEqualTo(TokenList.OPENING_BRACKET)){
             this.errorHandler.reportError("expected '{' for the code block");//HANDLE } AT PARSE LOOP
@@ -136,7 +144,7 @@ public class Parser {
     }
     //when implementing this, check all usages of parse expression for correct usage
     //TODO TEST THIS FUNC
-    //currently the parser returns when the current token is a semicolon marking the end of the expression
+    //currently the parser returns when the current Tokenization.token is a semicolon marking the end of the expression
     private AstExpression ParseExpression () throws ParserException,EofException{
         AstExpression exp = PrattParse(0.0);
         this.next();//end at the semicolon
@@ -145,17 +153,17 @@ public class Parser {
 
     private AstExpression PrattParse(Double min_bp) throws ParserException,EofException{
 
-        if(!IsAtom(this.CurrentToken)){
+        if(!IsAtom()){
             this.errorHandler.reportError("expected an atomic variable or value at expression");
         }
         //create an atom
-        AstExpression lhs = new AstAtomExpression(Tokens.get(this.CurrentToken).value,(getCurrentToken()==TokenList.IDENTIFIER));
+        AstExpression lhs = new AstAtomExpression(Tokens.get(this.CurrentToken).getValue(),(getCurrentToken()==TokenList.IDENTIFIER));
 
         while(true){//standard practice implementing pratt parsing
-            if(this.peek().token==TokenList.SEMICOLON) {//if detected a semicolon - end parsing
+            if(this.peek().getToken()==TokenList.SEMICOLON) {//if detected a semicolon - end parsing
                 break;
             }
-            if(!isOp(this.peek().token)) {//if wrong token is detected throw error
+            if(!isOp(this.peek().getToken())) {//if wrong Tokenization.token is detected throw error
                 this.errorHandler.reportError("expected an operator at expression");
             }
 
@@ -175,10 +183,7 @@ public class Parser {
         }
         return lhs;
     }
-//    private AstStatement ParseComment()throws EofException{
-//        this.next();
-//        return null;
-//    }
+
     ///////////////////////////////////////////////////////////////PARSE FUNCTIONS
 
 
@@ -188,15 +193,12 @@ public class Parser {
         return getCurrentToken()==token;
     }
 
-    private boolean IsAtom(int TokenCount){
-        if(TokenCount<this.Tokens.size()) {
-            return (this.Tokens.get(TokenCount).token == TokenList.NUMBER || this.Tokens.get(TokenCount).token == TokenList.IDENTIFIER);
-        }
-        return false;
+    private boolean IsAtom(){
+        return (getCurrentToken() == TokenList.NUMBER || getCurrentToken() == TokenList.IDENTIFIER);
         }
 
     private TokenList getCurrentToken(){
-        return this.Tokens.get(this.CurrentToken).token;
+        return this.Tokens.get(this.CurrentToken).getToken();
     }
 
     private token peek()throws EofException{
@@ -222,7 +224,7 @@ public class Parser {
 
 
     ///////////////////////////////////////////////////////////panic mode
-    private void Sync()throws EofException{
+    private void Sync()throws EofException {
         do {
             this.next();//skip until a new statement is detected
         } while (!token.statements.contains(getCurrentToken()));

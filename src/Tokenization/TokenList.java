@@ -1,0 +1,25 @@
+package Tokenization;
+
+public enum TokenList {//if u want to add a keyword,an operator or whatever state it before u create it.eg KEYWORD_INT ,not just INT
+    KEYWORD_INT,
+    KEYWORD_EXIT,//exit
+    IDENTIFIER,
+    OPERATOR_PLUS,
+    OPERATOR_MINUS,
+    OPERATOR_DEVIDES,
+    OPERATOR_MULTIPLIE,
+    OPERATOR_EQUALS,//not an expression op need to add ==
+    OPERATOR_NOTEQUALS,
+    OPERATOR_GREATERTHEN,
+    OPERATOR_SMALLERTHEN,
+    SEMICOLON,
+    COMMENT,
+    NUMBER,
+    KEYWORD_IF,
+    OPENING_BRACKET,
+    CLOSING_BRACKET,
+    OPENING_ROUND_BRACKET,//add to Tokenization.tokenizer
+    CLOSING_ROUND_BRACKET,//add to Tokenization.tokenizer
+    KEYWORD_WHILE//add to Tokenization.tokenizer
+
+}

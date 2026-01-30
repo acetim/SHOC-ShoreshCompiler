@@ -1,3 +1,5 @@
+package Parsing.AstNodes;
+
 public class AstExpression extends AstElement{
     private String value;
 

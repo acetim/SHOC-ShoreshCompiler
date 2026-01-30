@@ -1,3 +1,7 @@
+package Parsing.AstNodes;
+
+import Tokenization.TokenList;
+
 public class AstExitStatement extends AstStatement{
     private AstExpression ExitCode;
 

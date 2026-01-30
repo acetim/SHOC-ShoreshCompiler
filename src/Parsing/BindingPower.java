@@ -1,3 +1,5 @@
+package Parsing;
+
 public class BindingPower {
     private Double left;
     private Double right;

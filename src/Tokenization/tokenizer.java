@@ -1,8 +1,6 @@
-import java.util.ArrayList;
+package Tokenization;
 
-import java.util.HashMap;
-import java.util.Locale;//HUH????
-import java.util.Map;
+import java.util.ArrayList;
 
 public class tokenizer {//TODO ADD VALUES TO TOKENS THAT ARE RETURNED
     String code;
@@ -22,7 +20,7 @@ public class tokenizer {//TODO ADD VALUES TO TOKENS THAT ARE RETURNED
 
 
 
-    public Object[] next(int index){//returns the new index and the token
+    public Object[] next(int index){//returns the new index and the Tokenization.token
 
         String buffer="";
         Object[] ret=new Object[2];
@@ -165,7 +163,7 @@ public class tokenizer {//TODO ADD VALUES TO TOKENS THAT ARE RETURNED
         ArrayList<token> lst=this.tokenize();
         String text="";
         for(int i=0;i< lst.size();i++){
-            text+= lst.get(i).token.name()+" ";
+            text+= lst.get(i).getToken().name()+" ";
         }
         return text;
     }

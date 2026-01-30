@@ -1,3 +1,5 @@
+package Parsing.AstNodes;
+
 public class AstAtomExpression extends AstExpression{
 
     private boolean IsVariable;
