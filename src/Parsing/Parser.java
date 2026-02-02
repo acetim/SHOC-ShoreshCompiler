@@ -48,11 +48,11 @@ public class Parser {
     private void ParseLoop(boolean IsNestedParse,ArrayList<AstStatement> Statements) throws EofException{
         while(this.CurrentToken<this.Tokens.size()){
             try {
-                Statements.add(ParseStatement());
-                this.CurrentToken++;
                 if (IsNestedParse && this.getCurrentToken() == TokenList.CLOSING_BRACKET) {
                     return;
                 }
+                Statements.add(ParseStatement());
+                this.CurrentToken++;
             } catch(ParserException e){
                 System.out.println("Syntax error detected, entering panic mode to review all syntax errors");
                 this.Sync();//jump to next valid statement
@@ -68,6 +68,7 @@ public class Parser {
 
     ///////////////////////////////////////////////////////////////PARSE FUNCTIONS
     private AstStatement ParseStatement () throws ParserException,EofException{// returns null on comment statement !! HANDLE THIS !!
+
         switch(this.Tokens.get(CurrentToken).getToken())
         {
 
@@ -82,15 +83,40 @@ public class Parser {
         }
     }
 
+
+    private AstStatement ParseExpressionStatement() throws ParserException,EofException{
+        /*
+        TODO - IMPLEMENT THIS ,EXPECT INT ONLY - STRINGS ARE CONSTANT
+          */
+    }
+
+    private AstStatement ParseIntDeclaration() throws ParserException,EofException{
+        this.next();
+        if(!CurrentTokenIsEqualTo(TokenList.IDENTIFIER)){
+            this.errorHandler.reportError("expected valid name for identifier after 'int' ");
+        }
+        String intName = this.Tokens.get(this.CurrentToken).getValue();
+        this.next();
+        if(CurrentTokenIsEqualTo(TokenList.SEMICOLON)){
+            return new AstIntDeclaration(intName,32,null);
+        }
+        if(!CurrentTokenIsEqualTo(TokenList.OPERATOR_EQUALS)){
+            this.errorHandler.reportError("expected ; or = for expression");
+        }
+        this.next();
+        AstExpression expression = ParseExpression();//ends at semicolon token
+        return new AstIntDeclaration(intName,32,expression);
+    }
+
     private AstStatement ParseWhileStatement() throws ParserException,EofException{
         this.next();
-        if(checkIfCurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
+        if(!CurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
             this.errorHandler.reportError("expected '(' at while statement");
         }
         this.next();
         AstExpression Condition = ParseExpression();
         this.next();
-        if(checkIfCurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
+        if(!CurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
             this.errorHandler.reportError("expected ')' at while statement");
         }
         this.next();
@@ -101,13 +127,13 @@ public class Parser {
 
     private AstStatement ParseExit() throws ParserException,EofException{
         this.next();
-        if(checkIfCurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
+        if(!CurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
             this.errorHandler.reportError("expected '(' at exit statement");
         }
         this.next();
         AstExpression ExitCode = ParseExpression();
         this.next();
-        if(checkIfCurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
+        if(!CurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
             this.errorHandler.reportError("expected ')' at exit statement");
         }
         return new AstExitStatement(ExitCode);
@@ -116,13 +142,13 @@ public class Parser {
 
     private AstStatement ParseIfStatement() throws ParserException,EofException{//throw exceptions
         this.next();
-        if(checkIfCurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
+        if(!CurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
             this.errorHandler.reportError("expected '(' at if statement");
         }
         this.next();
         AstExpression Condition = ParseExpression();
         this.next();
-        if(checkIfCurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
+        if(!CurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
             this.errorHandler.reportError("expected ')' at if statement");
         }
         this.next();
@@ -131,15 +157,13 @@ public class Parser {
         return new AstIfStatement(Condition,TrueBlock);
     }
 
-    private AstCodeBlock ParseCodeBlock() throws ParserException {//should get the Tokenization.token that is the first { and return when encountering } and change the current pointer so it is one Tokenization.token after the end of the code block(main parser should have the same behavior)
-
-        if(checkIfCurrentTokenIsEqualTo(TokenList.OPENING_BRACKET)){
+    private AstCodeBlock ParseCodeBlock() throws ParserException,EofException{//should get the Tokenization.token that is the first { and return when encountering } and change the current pointer so it is one Tokenization.token after the end of the code block(main parser should have the same behavior)
+        if(!CurrentTokenIsEqualTo(TokenList.OPENING_BRACKET)){
             this.errorHandler.reportError("expected '{' for the code block");//HANDLE } AT PARSE LOOP
         }
         ArrayList<AstStatement> Statements = new ArrayList<>();
-        //TODO call parse loop (parse loop should take end condition in which if the parse loop encounters it after incrementing it returns and the original parse loop s called with null)
-        //PARSE LOOP SHOULD RETURN TO Statements
-
+        this.next();
+        ParseLoop(true,Statements);//returns when the current token is }
         return new AstCodeBlock(Statements);
     }
     //when implementing this, check all usages of parse expression for correct usage
@@ -189,7 +213,7 @@ public class Parser {
 
 
     /////////////////////////////////////////////////////////////helper functions
-    private boolean checkIfCurrentTokenIsEqualTo(TokenList token){
+    private boolean CurrentTokenIsEqualTo(TokenList token){
         return getCurrentToken()==token;
     }
 
