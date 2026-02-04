@@ -187,20 +187,34 @@ public class Parser {
         sets this.currentToken to be the semicolon at the end of the exp
          */
         AstExpression exp = PrattParse(0.0);
-        this.next();//end at the semicolon
+        this.next();//end at the semicolon or send error if ')'
+        if(this.getCurrentToken()==TokenList.CLOSING_BRACKET){
+            this.errorHandler.reportError("expected ';' at the end of the expression");
+        }
         return exp;
     }
 
     private AstExpression PrattParse(Double min_bp) throws ParserException,EofException{
 
-        if(!IsAtom()){
+        AstExpression lhs=null;
+        if(IsAtom()) {
+            lhs = new AstAtomExpression(Tokens.get(this.CurrentToken).getValue(), (getCurrentToken() == TokenList.IDENTIFIER));
+        }
+        else if(CurrentTokenIsEqualTo(TokenList.OPENING_BRACKET)){
+            //parse parentheses
+            this.next();
+            lhs =PrattParse(0.0);
+            this.next();
+            if(this.getCurrentToken()==TokenList.SEMICOLON){
+                this.errorHandler.reportError("expected ')' at expression");
+            }
+        }
+        else{
             this.errorHandler.reportError("expected an atomic variable or value at expression");
         }
-        //create an atom
-        AstExpression lhs = new AstAtomExpression(Tokens.get(this.CurrentToken).getValue(),(getCurrentToken()==TokenList.IDENTIFIER));
 
         while(true){//standard practice implementing pratt parsing
-            if(this.peek().getToken()==TokenList.SEMICOLON) {//if detected a semicolon - end parsing
+            if(this.peek().getToken()==TokenList.SEMICOLON||this.peek().getToken()==TokenList.CLOSING_BRACKET) {//if detected a semicolon - end parsing
                 break;
             }
             if(!isOp(this.peek().getToken())) {//if wrong Tokenization.token is detected throw error
