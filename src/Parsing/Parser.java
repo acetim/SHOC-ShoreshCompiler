@@ -13,7 +13,7 @@ public class Parser {
     private int CurrentToken;
     private final HashMap<TokenList,BindingPower> BindingPowers;
     private final ParserErrorHandler errorHandler;
-    private ArrayList<AstStatement> allStatements;
+    private final ArrayList<AstStatement> allStatements;
     public Parser(ArrayList<token> tokens) {
         this.Tokens = tokens;
         this.CurrentToken = 0;
@@ -69,25 +69,38 @@ public class Parser {
     ///////////////////////////////////////////////////////////////PARSE FUNCTIONS
     private AstStatement ParseStatement () throws ParserException,EofException{// returns null on comment statement !! HANDLE THIS !!
 
-        switch(this.Tokens.get(CurrentToken).getToken())
-        {
-
-            case TokenList.KEYWORD_EXIT:
+        switch (this.getCurrentToken()) {
+            case TokenList.KEYWORD_EXIT -> {
                 return this.ParseExit();
-            case TokenList.KEYWORD_IF:
+            }
+            case TokenList.KEYWORD_IF -> {
                 return this.ParseIfStatement();
-            default:
+            }
+            case TokenList.KEYWORD_WHILE -> {
+                return this.ParseWhileStatement();
+            }
+            case TokenList.KEYWORD_INT -> {
+                return this.ParseIntDeclaration();
+            }
+            case TokenList.IDENTIFIER -> {
+                return this.ParseExpressionStatement();
+            }
+            default -> {
                 this.errorHandler.reportError("unexpected Tokenization.token detected");
                 return null;
-
+            }
         }
     }
 
-
     private AstStatement ParseExpressionStatement() throws ParserException,EofException{
-        /*
-        TODO - IMPLEMENT THIS ,EXPECT INT ONLY - STRINGS ARE CONSTANT
-          */
+        String varName =this.Tokens.get(this.CurrentToken).getValue();
+        next();
+        if(!CurrentTokenIsEqualTo(TokenList.OPERATOR_EQUALS)){
+            this.errorHandler.reportError("expected '=' at expression statement");
+        }
+        next();
+        AstExpression expression = ParseExpression();
+        return new AstExpressionStatement(varName,expression);
     }
 
     private AstStatement ParseIntDeclaration() throws ParserException,EofException{
@@ -166,10 +179,13 @@ public class Parser {
         ParseLoop(true,Statements);//returns when the current token is }
         return new AstCodeBlock(Statements);
     }
-    //when implementing this, check all usages of parse expression for correct usage
-    //TODO TEST THIS FUNC
-    //currently the parser returns when the current Tokenization.token is a semicolon marking the end of the expression
+
     private AstExpression ParseExpression () throws ParserException,EofException{
+        /*
+        should call func when the current token is the first atom of the exp
+        returns the parsed expression tree
+        sets this.currentToken to be the semicolon at the end of the exp
+         */
         AstExpression exp = PrattParse(0.0);
         this.next();//end at the semicolon
         return exp;
