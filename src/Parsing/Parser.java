@@ -291,6 +291,24 @@ public class Parser {
         }
     }
     ///////////////////////////////////////////////////////////panic mode
+
+
+
+    ///////////////////////////////////////////////////////////PARSER TESTING TODO REMOVE THIS SECTION
+    public AstExpression TEST___PARSE___EXPRESSION(){
+        try {
+            return this.ParseExpression();
+        } catch (ParserException e) {
+            this.PrintSyntaxErrors();
+            throw new RuntimeException();
+        } catch (EofException e) {
+            System.out.println("EOF ERR");
+            throw new RuntimeException(e);
+        }
+    }
+    ///////////////////////////////////////////////////////////PARSER TESTING TODO REMOVE THIS SECTION
+
+
 }
 
 
