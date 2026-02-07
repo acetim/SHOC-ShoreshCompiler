@@ -22,6 +22,8 @@ public enum TokenList {//if u want to add a keyword,an operator or whatever stat
     OPENING_ROUND_BRACKET,//add to Tokenization.tokenizer
     CLOSING_ROUND_BRACKET,//add to Tokenization.tokenizer
     KEYWORD_WHILE,//add to Tokenization.tokenizer
+    PRINT_STRING,
+    PRINT_INT,
     STRING_LITERAL//add to Tokenization.tokenizer
 
 }
