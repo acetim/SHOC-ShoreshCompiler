@@ -1,17 +1,32 @@
 package Parsing.AstNodes;
 
+import Tokenization.token;
+
 public class AstExpression extends AstElement{
-    private String value;
-
-    public AstExpression(String value) {
-        this.value = value;
+    private final token Token;
+    private final AstExpression left;
+    private final AstExpression right;
+    public AstExpression(token value) {
+        this.Token = value;
+        this.left=null;
+        this.right=null;
+    }
+    public AstExpression(token value,AstExpression left, AstExpression right) {
+        this.Token = value;
+        this.left=left;
+        this.right=right;
     }
 
-    public String getValue() {
-        return value;
+    public AstExpression getLeft() {
+        return left;
     }
 
-    public void setValue(String value) {
-        value = value;
+    public AstExpression getRight() {
+        return right;
     }
+
+    public token getToken() {
+        return Token;
+    }
+
 }
