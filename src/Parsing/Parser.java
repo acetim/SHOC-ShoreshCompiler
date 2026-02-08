@@ -188,7 +188,7 @@ public class Parser {
          */
         AstExpression exp = PrattParse(0.0);
         this.next();//end at the semicolon or send error if ')'
-        if(this.getCurrentToken()==TokenList.CLOSING_BRACKET){
+        if(this.getCurrentToken()==TokenList.CLOSING_ROUND_BRACKET){
             this.errorHandler.reportError("expected ';' at the end of the expression");
         }
         return exp;
@@ -198,9 +198,9 @@ public class Parser {
 
         AstExpression lhs=null;
         if(IsAtom()) {
-            lhs = new AstAtomExpression(Tokens.get(this.CurrentToken).getValue(), (getCurrentToken() == TokenList.IDENTIFIER));
+            lhs = new AstExpression(Tokens.get(this.CurrentToken));
         }
-        else if(CurrentTokenIsEqualTo(TokenList.OPENING_BRACKET)){
+        else if(CurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
             //parse parentheses
             this.next();
             lhs =PrattParse(0.0);
@@ -214,7 +214,7 @@ public class Parser {
         }
 
         while(true){//standard practice implementing pratt parsing
-            if(this.peek().getToken()==TokenList.SEMICOLON||this.peek().getToken()==TokenList.CLOSING_BRACKET) {//if detected a semicolon - end parsing
+            if(this.peek().getToken()==TokenList.SEMICOLON||this.peek().getToken()==TokenList.CLOSING_ROUND_BRACKET) {//if detected a semicolon - end parsing
                 break;
             }
             if(!isOp(this.peek().getToken())) {//if wrong Tokenization.token is detected throw error
@@ -222,18 +222,18 @@ public class Parser {
             }
 
             this.next();
-            TokenList op = getCurrentToken();//get operation
+            token op = this.Tokens.get(this.CurrentToken);//get operation
 
             //get binding powers
-            Double l_bp = this.BindingPowers.get(op).getLeft();
-            Double r_bp = this.BindingPowers.get(op).getRight();
+            Double l_bp = this.BindingPowers.get(op.getToken()).getLeft();
+            Double r_bp = this.BindingPowers.get(op.getToken()).getRight();
 
             //if the current binding power of the operation is smaller than the previous, break and return lhs (no need to attach to weaker operation)
             if(l_bp<min_bp){break;}
 
             this.next();
             AstExpression rhs = PrattParse(r_bp);//if not recurse and keep exploring
-            lhs = new AstBinOpExpression(lhs,rhs,op);
+            lhs = new AstExpression(op,lhs,rhs);
         }
         return lhs;
     }
