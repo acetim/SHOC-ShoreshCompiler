@@ -3,30 +3,35 @@ import Exceptions.TokenizerException;
 
 import java.util.ArrayList;
 import java.util.Map;
-
+/*
+the tokenizer class takes a file path for its constructor and creates a tokenizer ready to tokenize file
+the class uses Tokenize() function to tokenize the file and store the tokens as an array list in the class
+ */
 public class Tokenizer {
     private final FileIO file;
     private int current;//current char being processed
     private final ArrayList<token> tokens;
-    private final static Map<Character, TokenList> operators = Map.of(
-            '+', TokenList.OPERATOR_PLUS,
-            '-', TokenList.OPERATOR_MINUS,
-            '*', TokenList.OPERATOR_MULTIPLIE,
-            '/', TokenList.OPERATOR_DEVIDES,
-            '=', TokenList.OPERATOR_EQUALS,
-            ';', TokenList.SEMICOLON,
-            '(', TokenList.OPENING_ROUND_BRACKET,
-            ')', TokenList.CLOSING_ROUND_BRACKET,
-            '{',TokenList.OPENING_BRACKET,
-            '}',TokenList.CLOSING_BRACKET
+    private final static Map<Character, TokenList> operators = Map.ofEntries(
+            Map.entry('+', TokenList.OPERATOR_PLUS),
+            Map.entry('-', TokenList.OPERATOR_MINUS),
+            Map.entry('*', TokenList.OPERATOR_MULTIPLIE),
+            Map.entry('/', TokenList.OPERATOR_DEVIDES),
+            Map.entry('=', TokenList.OPERATOR_EQUALS),
+            Map.entry(';', TokenList.SEMICOLON),
+            Map.entry('(', TokenList.OPENING_ROUND_BRACKET),
+            Map.entry(')', TokenList.CLOSING_ROUND_BRACKET),
+            Map.entry('{', TokenList.OPENING_BRACKET),
+            Map.entry('}', TokenList.CLOSING_BRACKET),
+            Map.entry('<', TokenList.OPERATOR_SMALLERTHAN),
+            Map.entry('>', TokenList.OPERATOR_GREATERTHAN)
     );
-    private final static Map<String, TokenList> statements = Map.of(
-            "מספר", TokenList.KEYWORD_INT,
-            "ויהי_חושך", TokenList.KEYWORD_EXIT,
-            "אם", TokenList.KEYWORD_IF,
-            "בעוד",TokenList.KEYWORD_WHILE,
-            "ויאמר",TokenList.PRINT_STRING,
-            "ויאמר_מספר",TokenList.PRINT_INT
+    private final static Map<String, TokenList> statements = Map.ofEntries(
+            Map.entry("מספר", TokenList.KEYWORD_INT),
+            Map.entry("ויהי_חושך", TokenList.KEYWORD_EXIT),
+            Map.entry("אם", TokenList.KEYWORD_IF),
+            Map.entry("בעוד", TokenList.KEYWORD_WHILE),
+            Map.entry("ויאמר", TokenList.PRINT_STRING),
+            Map.entry("ויאמר_מספר", TokenList.PRINT_INT)
     );
     public Tokenizer(String filePath) {
         this.current=0;
@@ -47,8 +52,9 @@ public class Tokenizer {
                 TokenizeLine(line);
             }
             this.file.closeIO();
+            System.out.println("\u001B[32m" + "טוקניזציה הסתיימה בהצלחה" + "\u001B[0m");
         }catch (TokenizerException e){
-            System.err.println("תו לא ברור זוהה");
+            System.err.println(e.getMessage());
             this.file.closeIO();
             System.exit(1);
         }
@@ -62,6 +68,7 @@ public class Tokenizer {
          */
         while(this.current<code.length()) {
             char c = code.charAt(current);
+
             if(Character.isWhitespace(c)){
                 this.current++;
                 continue;
@@ -80,8 +87,25 @@ public class Tokenizer {
                 this.tokens.add(TokenizeIdentifierOrStatement(code));
                 continue;
             }
-            throw new TokenizerException("תו לא ברור זוהה");
+            if(c=='"'){
+                String StringLiteral=TokenizeStringLiteral(code);
+                this.tokens.add(new token(StringLiteral,TokenList.STRING_LITERAL));
+                continue;
+            }
+            throw new TokenizerException(c+" :תו לא ברור זוהה");
         }
+    }
+
+    private String TokenizeStringLiteral(String code){
+        this.current++;
+        String buf = "";
+
+        while(this.current<code.length()&&code.charAt(current)!='"'){
+            buf+=code.charAt(current);
+            this.current++;
+        }
+        this.current++;
+        return buf;
     }
 
     private String TokenizeNumberLiteral(String code){
@@ -91,7 +115,7 @@ public class Tokenizer {
         returns the number as a string value
          */
         String buf="";
-        while(Character.isDigit(code.charAt(current))){
+        while(this.current<code.length()&&Character.isDigit(code.charAt(current))){
             buf=buf+code.charAt(current);
             current++;
         }
@@ -106,7 +130,7 @@ public class Tokenizer {
         valid chars for identifiers and vars are alphabetical letters ,numbers(not at the start) and underscores(not at the start)
          */
         String buf="";
-        while(Character.isAlphabetic(code.charAt(current))||Character.isDigit(code.charAt(current))||code.charAt(current)=='_'){
+        while(this.current<code.length()&&(Character.isAlphabetic(code.charAt(current))||Character.isDigit(code.charAt(current))||code.charAt(current)=='_')){
             buf=buf+code.charAt(current);
             current++;
         }
@@ -116,5 +140,7 @@ public class Tokenizer {
         return new token(buf,TokenList.IDENTIFIER);
     }
 
-
+    public ArrayList<token> getTokens() {
+        return tokens;
+    }
 }

@@ -11,8 +11,8 @@ public enum TokenList {//if u want to add a keyword,an operator or whatever stat
     OPERATOR_MULTIPLIE,
     OPERATOR_EQUALS,//not an expression op need to add ==
     OPERATOR_NOTEQUALS,
-    OPERATOR_GREATERTHEN,
-    OPERATOR_SMALLERTHEN,
+    OPERATOR_GREATERTHAN,
+    OPERATOR_SMALLERTHAN,
     SEMICOLON,
     COMMENT,
     NUMBER,

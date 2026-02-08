@@ -25,6 +25,7 @@ public class FileIO {
     public void closeIO(){
         try {
             this.Reader.close();
+            System.out.println("\u001B[32m" + "קורא הקבצים נסגר בהצלחה" + "\u001B[0m");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
