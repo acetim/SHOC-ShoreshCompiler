@@ -201,6 +201,7 @@ public class Parser {
             lhs = new AstExpression(Tokens.get(this.CurrentToken));
         }
         else if(CurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
+
             //parse parentheses
             this.next();
             lhs =PrattParse(0.0);
@@ -217,12 +218,13 @@ public class Parser {
             if(this.peek().getToken()==TokenList.SEMICOLON||this.peek().getToken()==TokenList.CLOSING_ROUND_BRACKET) {//if detected a semicolon - end parsing
                 break;
             }
+
             if(!isOp(this.peek().getToken())) {//if wrong Tokenization.token is detected throw error
                 this.errorHandler.reportError("expected an operator at expression");
             }
 
-            this.next();
-            token op = this.Tokens.get(this.CurrentToken);//get operation
+
+            token op = this.peek();//get operation
 
             //get binding powers
             Double l_bp = this.BindingPowers.get(op.getToken()).getLeft();
@@ -230,11 +232,12 @@ public class Parser {
 
             //if the current binding power of the operation is smaller than the previous, break and return lhs (no need to attach to weaker operation)
             if(l_bp<min_bp){break;}
-
+            this.next();
             this.next();
             AstExpression rhs = PrattParse(r_bp);//if not recurse and keep exploring
             lhs = new AstExpression(op,lhs,rhs);
         }
+
         return lhs;
     }
 
