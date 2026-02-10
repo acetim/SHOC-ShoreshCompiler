@@ -3,8 +3,8 @@ package Parsing.AstNodes;
 import Tokenization.TokenList;
 
 public class AstExpressionStatement extends AstStatement {
-    private String identifier;
-    private AstExpression expression;
+    private final String identifier;
+    private final AstExpression expression;
 
     public AstExpressionStatement(String identifier, AstExpression expression) {
         super(TokenList.IDENTIFIER);

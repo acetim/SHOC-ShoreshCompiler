@@ -5,7 +5,7 @@ import Exceptions.ParserException;
 import java.util.ArrayList;
 
 public class ParserErrorHandler {
-    private ArrayList<String> errors;
+    private final ArrayList<String> errors;
     private boolean ErrorsPresent;
 
     public ParserErrorHandler() {
@@ -26,7 +26,5 @@ public class ParserErrorHandler {
         return errors;
     }
 
-    public void setErrors(ArrayList<String> errors) {
-        this.errors = errors;
-    }
+
 }
