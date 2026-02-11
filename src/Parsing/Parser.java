@@ -36,13 +36,20 @@ public class Parser {
             ParseLoop(false,this.allStatements);
             if(this.errorHandler.errorArePresent()){
                 this.PrintSyntaxErrors();
-                //TODO call system exit
+                System.exit(1);
+            }
+            else{
+                System.out.println("\u001B[32m" + "בדיקה דיקדוקית הסתיימה בהצלחה" + "\u001B[0m");
             }
         }catch(EofException e){
-            System.err.println("!EOF ERROR!");
+            System.err.println(e.getMessage());
             this.PrintSyntaxErrors();
-            //TODO call system exit
+            System.exit(1);
         }
+    }
+
+    public ArrayList<AstStatement> getAllStatements(){
+        return this.allStatements;
     }
 
     private void ParseLoop(boolean IsNestedParse,ArrayList<AstStatement> Statements) throws EofException{
@@ -54,12 +61,12 @@ public class Parser {
                 Statements.add(ParseStatement());
                 this.CurrentToken++;
             } catch(ParserException e){
-                System.out.println("Syntax error detected, entering panic mode to review all syntax errors");
+                System.err.println("זוהתה בעיה דיקדוקית! נכנס למצב פאניקה לגילוי חטאים נוספים");
                 this.Sync();//jump to next valid statement
             }
         }
         if(IsNestedParse) {
-            throw new EofException("expected '}' EOF REACHED WHILE PARSING");
+            throw new EofException("צדיק שחכת להוסיף 'ויתם' בסוף הפרק! המתחיל במצווה – אומרים לו גמור ");
         }
     }
     ///////////////////////////////////////////////////////////////ParserAPI
@@ -86,7 +93,7 @@ public class Parser {
                 return this.ParseExpressionStatement();
             }
             default -> {
-                this.errorHandler.reportError("unexpected Tokenization.token detected");
+                this.errorHandler.reportError("צדיק, זוהתה מילה לא נכונה אנא תקן!");
                 return null;
             }
         }
@@ -96,7 +103,7 @@ public class Parser {
         String varName =this.Tokens.get(this.CurrentToken).getValue();
         next();
         if(!CurrentTokenIsEqualTo(TokenList.OPERATOR_EQUALS)){
-            this.errorHandler.reportError("expected '=' at expression statement");
+            this.errorHandler.reportError("צדיק שכחת להוסיף '=' בביטוי ההשוואה!");
         }
         next();
         AstExpression expression = ParseExpression();
@@ -106,7 +113,7 @@ public class Parser {
     private AstStatement ParseIntDeclaration() throws ParserException,EofException{
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.IDENTIFIER)){
-            this.errorHandler.reportError("expected valid name for identifier after 'int' ");
+            this.errorHandler.reportError("ציפיתי ממך לשם נורמלי למשתנה שהגדרת!");
         }
         String intName = this.Tokens.get(this.CurrentToken).getValue();
         this.next();
@@ -114,7 +121,7 @@ public class Parser {
             return new AstIntDeclaration(intName,32,null);
         }
         if(!CurrentTokenIsEqualTo(TokenList.OPERATOR_EQUALS)){
-            this.errorHandler.reportError("expected ; or = for expression");
+            this.errorHandler.reportError("הגדרת משתנה צריכה להגמר ב ';' או ב '=' ואז הגדרת הערך");
         }
         this.next();
         AstExpression expression = ParseExpression();//ends at semicolon token
@@ -124,13 +131,13 @@ public class Parser {
     private AstStatement ParseWhileStatement() throws ParserException,EofException{
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
-            this.errorHandler.reportError("expected '(' at while statement");
+            this.errorHandler.reportError("שחכת להוסיף '(' אחרי הכרזת בעוד");
         }
         this.next();
         AstExpression Condition = ParseExpression();
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
-            this.errorHandler.reportError("expected ')' at while statement");
+            this.errorHandler.reportError("שחכת להוסיף ')' בסוף הכרזת בעוד");
         }
         this.next();
         AstCodeBlock CodeBlock =ParseCodeBlock();
@@ -141,13 +148,13 @@ public class Parser {
     private AstStatement ParseExit() throws ParserException,EofException{
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
-            this.errorHandler.reportError("expected '(' at exit statement");
+            this.errorHandler.reportError("שחכת להוסיף '(' אחרי הכרזת ויהי חושך");
         }
         this.next();
         AstExpression ExitCode = ParseExpression();
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
-            this.errorHandler.reportError("expected ')' at exit statement");
+            this.errorHandler.reportError("שחכת להוסיף ')' בסוף הכרזת ויהי חושך");
         }
         return new AstExitStatement(ExitCode);
 
@@ -156,13 +163,13 @@ public class Parser {
     private AstStatement ParseIfStatement() throws ParserException,EofException{//throw exceptions
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
-            this.errorHandler.reportError("expected '(' at if statement");
+            this.errorHandler.reportError("שחכת להוסיף '(' אחרי הכרזת אם יהיה");
         }
         this.next();
         AstExpression Condition = ParseExpression();
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
-            this.errorHandler.reportError("expected ')' at if statement");
+            this.errorHandler.reportError("שחכת להוסיף ')' בסוף הכרזת אם יהיה");
         }
         this.next();
         AstCodeBlock TrueBlock =ParseCodeBlock();
@@ -172,11 +179,11 @@ public class Parser {
 
     private AstCodeBlock ParseCodeBlock() throws ParserException,EofException{//should get the Tokenization.token that is the first { and return when encountering } and change the current pointer so it is one Tokenization.token after the end of the code block(main parser should have the same behavior)
         if(!CurrentTokenIsEqualTo(TokenList.OPENING_BRACKET)){
-            this.errorHandler.reportError("expected '{' for the code block");//HANDLE } AT PARSE LOOP
+            this.errorHandler.reportError("ויעש צופה בתחילת הפרק");//HANDLE } AT PARSE LOOP
         }
         ArrayList<AstStatement> Statements = new ArrayList<>();
         this.next();
-        ParseLoop(true,Statements);//returns when the current token is }
+        this.ParseLoop(true,Statements);//returns when the current token is }
         return new AstCodeBlock(Statements);
     }
 
@@ -189,7 +196,7 @@ public class Parser {
         AstExpression exp = PrattParse(0.0);
         this.next();//end at the semicolon or send error if ')'
         if(this.getCurrentToken()==TokenList.CLOSING_ROUND_BRACKET){
-            this.errorHandler.reportError("expected ';' at the end of the expression");
+            this.errorHandler.reportError("צדיק, שכחת להוסיף ';' בסוף הביטוי!");
         }
         return exp;
     }
@@ -207,11 +214,11 @@ public class Parser {
             lhs =PrattParse(0.0);
             this.next();
             if(this.getCurrentToken()==TokenList.SEMICOLON){
-                this.errorHandler.reportError("expected ')' at expression");
+                this.errorHandler.reportError("צדיק, שחכת לסגור סוגריים כמו שצריך בביטוי");
             }
         }
         else{
-            this.errorHandler.reportError("expected an atomic variable or value at expression");
+            this.errorHandler.reportError("צופה מספר או משתנה בביטוי");
         }
 
         while(true){//standard practice implementing pratt parsing
@@ -220,7 +227,7 @@ public class Parser {
             }
 
             if(!isOp(this.peek().getToken())) {//if wrong Tokenization.token is detected throw error
-                this.errorHandler.reportError("expected an operator at expression");
+                this.errorHandler.reportError("צופתה פעולה בביטוי");
             }
 
 
@@ -262,7 +269,7 @@ public class Parser {
         if(this.CurrentToken<this.Tokens.size()-1) {
             return this.Tokens.get(this.CurrentToken + 1);
         }
-        throw new EofException("EOF HAS BEEN REACHED");
+        throw new EofException("בעיה: הגעה לסוף הקובץ");
     }
 
     private boolean isOp(TokenList t){
@@ -272,7 +279,7 @@ public class Parser {
     private void next() throws EofException{
         this.CurrentToken++;
         if(this.CurrentToken>=this.Tokens.size()){
-            throw new EofException("EOF HAS BEEN REACHED");
+            throw new EofException("בעיה: הגעה לסוף הקובץ");
         }
     }
 
@@ -288,7 +295,7 @@ public class Parser {
     }
 
     private void PrintSyntaxErrors(){
-        System.err.println("!SYNTAX ERRORS DETECTED!");
+        System.err.println("!זוהו בעיות דקדוקיות!");
         for(String s:this.errorHandler.getErrors()){
             System.err.println(s);
         }
@@ -305,7 +312,7 @@ public class Parser {
             this.PrintSyntaxErrors();
             throw new RuntimeException();
         } catch (EofException e) {
-            System.out.println("EOF ERR");
+            System.out.println("בעיה: הגעה לסוף הקובץ");
             throw new RuntimeException(e);
         }
     }

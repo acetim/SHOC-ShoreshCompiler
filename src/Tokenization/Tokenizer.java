@@ -10,7 +10,7 @@ the class uses Tokenize() function to tokenize the file and store the tokens as 
 public class Tokenizer {
     private final FileIO file;
     private int current;//current char being processed
-    private final ArrayList<token> tokens;
+    private ArrayList<token> tokens;
     private final static Map<Character, TokenList> operators = Map.ofEntries(
             Map.entry('+', TokenList.OPERATOR_PLUS),
             Map.entry('-', TokenList.OPERATOR_MINUS),
@@ -20,18 +20,18 @@ public class Tokenizer {
             Map.entry(';', TokenList.SEMICOLON),
             Map.entry('(', TokenList.OPENING_ROUND_BRACKET),
             Map.entry(')', TokenList.CLOSING_ROUND_BRACKET),
-            Map.entry('{', TokenList.OPENING_BRACKET),
-            Map.entry('}', TokenList.CLOSING_BRACKET),
             Map.entry('<', TokenList.OPERATOR_SMALLERTHAN),
             Map.entry('>', TokenList.OPERATOR_GREATERTHAN)
     );
     private final static Map<String, TokenList> statements = Map.ofEntries(
-            Map.entry("מספר", TokenList.KEYWORD_INT),
-            Map.entry("ויהי_חושך", TokenList.KEYWORD_EXIT),
-            Map.entry("אם", TokenList.KEYWORD_IF),
+            Map.entry("שלם", TokenList.KEYWORD_INT),
+            Map.entry("ויהי-חושך", TokenList.KEYWORD_EXIT),
+            Map.entry("אם-יהיה", TokenList.KEYWORD_IF),
             Map.entry("בעוד", TokenList.KEYWORD_WHILE),
             Map.entry("ויאמר", TokenList.PRINT_STRING),
-            Map.entry("ויאמר_מספר", TokenList.PRINT_INT)
+            Map.entry("ויאמר-שלם", TokenList.PRINT_INT),
+            Map.entry("ויעש", TokenList.OPENING_BRACKET),
+            Map.entry("ויתם", TokenList.CLOSING_BRACKET)
     );
     public Tokenizer(String filePath) {
         this.current=0;
@@ -143,4 +143,5 @@ public class Tokenizer {
     public ArrayList<token> getTokens() {
         return tokens;
     }
+
 }
