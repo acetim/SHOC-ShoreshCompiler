@@ -34,7 +34,8 @@ public class Tokenizer {
             Map.entry("ויתם", TokenList.CLOSING_BRACKET),
             Map.entry("ויהי", TokenList.FUNCTION_DECLERATION),
             Map.entry("תהו_ובהו", TokenList.VOID),
-            Map.entry("ויקרא",TokenList.FUNCTION_CALL)
+            Map.entry("ויקרא",TokenList.FUNCTION_CALL),
+            Map.entry("אמן",TokenList.KEYWORD_RETURN)
 
     );
     public Tokenizer(String filePath) {

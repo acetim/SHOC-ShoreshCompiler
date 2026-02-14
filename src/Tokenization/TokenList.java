@@ -17,6 +17,7 @@ public enum TokenList {//if u want to add a keyword,an operator or whatever stat
     COMMENT,
     FUNCTION_DECLERATION,
     FUNCTION_CALL,
+    KEYWORD_RETURN,
     VOID,
     NUMBER,
     KEYWORD_IF,

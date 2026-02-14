@@ -74,8 +74,12 @@ public class Parser {
 
 
     ///////////////////////////////////////////////////////////////PARSE FUNCTIONS
-    private AstStatement ParseStatement () throws ParserException,EofException{// returns null on comment statement !! HANDLE THIS !!
 
+
+    private AstStatement ParseStatement () throws ParserException,EofException{// returns null on comment statement !! HANDLE THIS !!
+        /*
+        every Parse func should set the current token to be the last token of the Statement
+         */
         switch (this.getCurrentToken()) {
             case TokenList.KEYWORD_EXIT -> {
                 return this.ParseExit();
@@ -98,11 +102,20 @@ public class Parser {
             case TokenList.FUNCTION_CALL -> {
                 return this.ParseFunctionCallStatement();
             }
+            case TokenList.KEYWORD_RETURN -> {
+                return this.ParseReturnStatement();
+            }
             default -> {
                 this.errorHandler.reportError("צדיק, זוהתה מילה לא נכונה אנא תקן!");
                 return null;
             }
         }
+    }
+
+    private AstStatement ParseReturnStatement() throws ParserException,EofException{
+        this.next();
+        AstExpression exp = ParseExpression();
+        return new AstReturnStatement(exp);
     }
 
     private AstStatement ParseExpressionStatement() throws ParserException,EofException{
