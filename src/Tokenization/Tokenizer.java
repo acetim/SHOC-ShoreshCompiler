@@ -31,7 +31,11 @@ public class Tokenizer {
             Map.entry("ויאמר", TokenList.PRINT_STRING),
             Map.entry("ויאמר-שלם", TokenList.PRINT_INT),
             Map.entry("ויעש", TokenList.OPENING_BRACKET),
-            Map.entry("ויתם", TokenList.CLOSING_BRACKET)
+            Map.entry("ויתם", TokenList.CLOSING_BRACKET),
+            Map.entry("ויהי", TokenList.FUNCTION_DECLERATION),
+            Map.entry("תהו_ובהו", TokenList.VOID),
+            Map.entry("ויקרא",TokenList.FUNCTION_CALL)
+
     );
     public Tokenizer(String filePath) {
         this.current=0;

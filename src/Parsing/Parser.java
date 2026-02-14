@@ -92,6 +92,12 @@ public class Parser {
             case TokenList.IDENTIFIER -> {
                 return this.ParseExpressionStatement();
             }
+            case TokenList.FUNCTION_DECLERATION -> {
+                return this.ParseFunctionDeclaration();
+            }
+            case TokenList.FUNCTION_CALL -> {
+                return this.ParseFunctionCallStatement();
+            }
             default -> {
                 this.errorHandler.reportError("צדיק, זוהתה מילה לא נכונה אנא תקן!");
                 return null;
@@ -108,6 +114,64 @@ public class Parser {
         next();
         AstExpression expression = ParseExpression();
         return new AstExpressionStatement(varName,expression);
+    }
+
+    private AstStatement ParseFunctionDeclaration()throws ParserException,EofException{
+        /*
+        gets called when the current token points to the ויהי keyword
+        returns an ast tree of the function declaration of type AstFunctionDeclaration
+         */
+        this.next();
+        if(!token.types.contains(this.getCurrentToken())&&this.getCurrentToken()!=TokenList.VOID){
+            this.errorHandler.reportError("לכל מעשה מעשה יש תוצאה! - אנא ציין את סוג ההחזרה של המעשה");
+        }
+        TokenList returnType = this.getCurrentToken();
+
+        this.next();
+        if(this.getCurrentToken()!=TokenList.IDENTIFIER){
+            this.errorHandler.reportError("לכל מעשה יש שם!- אנא ציין את שם המעשה");
+        }
+        String funcName = this.Tokens.get(this.CurrentToken).getValue();
+
+        ArrayList<AstParameter> parameters= new ArrayList<>();
+        this.next();
+        if(this.getCurrentToken()!=TokenList.OPENING_ROUND_BRACKET){
+            this.errorHandler.reportError("ציפה ל '(' לאחר הכרזת שם הפונקציה");
+        }
+        this.next();
+        while(this.getCurrentToken()!=TokenList.CLOSING_ROUND_BRACKET){
+           parameters.add(this.ParseParameter());
+           this.next();
+        }
+        this.next();
+        AstCodeBlock functionBody = this.ParseCodeBlock();
+
+        return new AstFunctionDeclaration(returnType,parameters,funcName,functionBody);
+
+    }
+
+    private AstStatement ParseFunctionCallStatement()throws ParserException,EofException{
+        /*
+        gets called when current token is FUNCTION_CALL
+        returns AstFunctionCallStatement
+        sets the current token to be the last token of the expression
+         */
+        this.next();
+        if(this.getCurrentToken()!=TokenList.IDENTIFIER){
+            this.errorHandler.reportError("ציפה לשם פונקציה אחרי ויקרא");
+        }
+        String funcName = this.Tokens.get(this.CurrentToken).getValue();
+        this.next();
+        if(this.getCurrentToken()!=TokenList.OPENING_ROUND_BRACKET){
+            this.errorHandler.reportError(" ציפה ל '(' אחרי שם הפונקציה");
+        }
+        this.next();
+        ArrayList<AstExpression> args= new ArrayList<>();
+        while(this.getCurrentToken()!=TokenList.CLOSING_ROUND_BRACKET){
+            args.add(this.ParseExpression());
+            this.next();
+        }
+        return new AstFunctionCallStatement(funcName,args);
     }
 
     private AstStatement ParseIntDeclaration() throws ParserException,EofException{
@@ -177,9 +241,9 @@ public class Parser {
         return new AstIfStatement(Condition,TrueBlock);
     }
 
-    private AstCodeBlock ParseCodeBlock() throws ParserException,EofException{//should get the Tokenization.token that is the first { and return when encountering } and change the current pointer so it is one Tokenization.token after the end of the code block(main parser should have the same behavior)
+    private AstCodeBlock ParseCodeBlock() throws ParserException,EofException{
         if(!CurrentTokenIsEqualTo(TokenList.OPENING_BRACKET)){
-            this.errorHandler.reportError("ויעש צופה בתחילת הפרק");//HANDLE } AT PARSE LOOP
+            this.errorHandler.reportError("ויעש צופה בתחילת הפרק");
         }
         ArrayList<AstStatement> Statements = new ArrayList<>();
         this.next();
@@ -201,10 +265,37 @@ public class Parser {
         return exp;
     }
 
+    private AstExpression ParseFunctionExpression() throws ParserException,EofException{
+        /*
+        parses functionExpressions - used whe calling functions inside expressions
+        or when calling functions that return void with 'ויעש'
+
+        should get called on the identifier of a function
+        returns an AstFunctionExpression that contains the arguments and the identifier token of the function
+        sets the currentToken counter to be the closing round bracket of th call
+         */
+        token tok = this.Tokens.get(this.CurrentToken);
+        ArrayList<AstExpression> args= new ArrayList<>();
+        this.next();
+        if(this.getCurrentToken()!=TokenList.OPENING_ROUND_BRACKET){
+            this.errorHandler.reportError("ציפה ל '(' בקריאה לפונקציה");
+        }
+        this.next();
+        while(this.getCurrentToken()!=TokenList.CLOSING_ROUND_BRACKET){
+            args.add(this.ParseExpression());
+            this.next();
+        }
+        return new AstFunctionExpression(tok,args);
+
+    }
+
     private AstExpression PrattParse(Double min_bp) throws ParserException,EofException{
 
         AstExpression lhs=null;
-        if(IsAtom()) {
+        if(this.getCurrentToken()==TokenList.IDENTIFIER&&this.peek().getToken()==TokenList.OPENING_ROUND_BRACKET){
+            lhs= ParseFunctionExpression();
+        }
+        else if(IsAtom()) {
             lhs = new AstExpression(Tokens.get(this.CurrentToken));
         }
         else if(CurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
@@ -246,6 +337,19 @@ public class Parser {
         }
 
         return lhs;
+    }
+
+    private AstParameter ParseParameter()throws ParserException,EofException{
+        if(!token.types.contains(this.getCurrentToken())){
+            this.errorHandler.reportError("ציפה לסוג פרמטר בפונקציה");
+        }
+        TokenList type = this.getCurrentToken();
+        this.next();
+        if(this.getCurrentToken()!=TokenList.IDENTIFIER){
+            this.errorHandler.reportError("ציפה לשם הארגומנט בפונקצייה");
+        }
+        String name = this.Tokens.get(this.CurrentToken).getValue();
+        return new AstParameter(type,name);
     }
 
     ///////////////////////////////////////////////////////////////PARSE FUNCTIONS
