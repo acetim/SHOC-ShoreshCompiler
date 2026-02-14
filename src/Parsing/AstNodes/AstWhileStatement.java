@@ -27,4 +27,12 @@ public class AstWhileStatement extends AstStatement{
     public void setCodeBlock(AstCodeBlock codeBlock) {
         this.codeBlock = codeBlock;
     }
+
+    @Override
+    public void print(String indent) {
+        System.out.print(indent+"WHILE: ");
+        condition.print(indent);
+        System.out.println();
+        codeBlock.print(indent+"    ");
+    }
 }

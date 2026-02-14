@@ -1,5 +1,6 @@
 package Parsing.AstNodes;
 
+import Parsing.Parser;
 import Tokenization.token;
 
 public class AstExpression extends AstElement{
@@ -17,6 +18,8 @@ public class AstExpression extends AstElement{
         this.right=right;
     }
 
+
+
     public AstExpression getLeft() {
         return left;
     }
@@ -28,5 +31,14 @@ public class AstExpression extends AstElement{
     public token getToken() {
         return Token;
     }
+    @Override
+    public void print(String indent) {
+        String exp = PARSER_TESTING.getPrefixString(this);
+        System.out.print(exp);
+    }
 
+    @Override
+    public String toString() {
+        return this.Token.getValue();
+    }
 }

@@ -17,4 +17,11 @@ public class AstExitStatement extends AstStatement{
     public void setExitCode(AstExpression exitCode) {
         ExitCode = exitCode;
     }
+
+    @Override
+    public void print(String indent) {
+        System.out.print(indent+"EXIT:");
+        ExitCode.print(indent);
+        System.out.println();
+    }
 }

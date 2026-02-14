@@ -15,4 +15,15 @@ public class AstIntDeclaration extends AstVarDeclaration {
     public void setExpression(AstExpression expression) {
         Expression = expression;
     }
+
+    @Override
+    public void print(String indent) {
+        System.out.print(indent+"INT "+this.getVarName());
+        if(this.Expression!=null) {
+            System.out.print("=");
+            this.Expression.print(indent);
+
+        }
+        System.out.println();
+    }
 }

@@ -33,4 +33,12 @@ public class AstIfStatement extends AstStatement{
     public void setTrueBlock(AstCodeBlock trueBlock) {
         this.trueBlock = trueBlock;
     }
+
+    @Override
+    public void print(String indent) {
+        System.out.print(indent+"if:");
+        condition.print(indent);
+        System.out.println();
+        trueBlock.print(indent+"    ");
+    }
 }

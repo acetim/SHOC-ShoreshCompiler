@@ -16,4 +16,9 @@ public class AstStatement extends AstElement{
     public void setStatementType(TokenList statementType) {
         StatementType = statementType;
     }
+
+    @Override
+    public void print(String indent) {
+        System.out.println("how did we get here?");
+    }
 }

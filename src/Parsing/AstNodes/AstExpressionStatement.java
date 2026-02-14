@@ -11,4 +11,11 @@ public class AstExpressionStatement extends AstStatement {
         this.identifier = identifier;
         this.expression = expression;
     }
+
+    @Override
+    public void print(String indent) {
+        System.out.print(indent+identifier+"=");
+        expression.print(indent);
+        System.out.println();
+    }
 }

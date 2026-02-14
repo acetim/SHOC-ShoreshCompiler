@@ -1,5 +1,8 @@
 package Parsing.AstNodes;
 
-public class AstElement {
+public abstract class AstElement {
+    public abstract void print(String indent);
+
+
 
 }
