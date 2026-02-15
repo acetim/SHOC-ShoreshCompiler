@@ -34,7 +34,7 @@ public class AstExpression extends AstElement{
     @Override
     public void print(String indent) {
         String exp = PARSER_TESTING.getPrefixString(this);
-        System.out.print(exp);
+        System.out.print(exp+";");
     }
 
     @Override

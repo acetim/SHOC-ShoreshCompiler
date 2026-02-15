@@ -28,6 +28,8 @@ public enum TokenList {//if u want to add a keyword,an operator or whatever stat
     KEYWORD_WHILE,//add to Tokenization.tokenizer
     PRINT_STRING,
     PRINT_INT,
+    BASAD,
     STRING_LITERAL//add to Tokenization.tokenizer
+
 
 }

@@ -26,7 +26,11 @@ public class Parser {
         this.BindingPowers.put(TokenList.OPERATOR_MULTIPLIE,new BindingPower(2.0,2.1));
         this.BindingPowers.put(TokenList.OPERATOR_DEVIDES,new BindingPower(2.0,2.1));
         //////////////////////////////////////////////MODIFY THIS AND operators IN TOKEN CLASS TO ADD/REMOVE OPERATORS IN THE PARSER
-
+        if(this.Tokens.getFirst().getToken()!=TokenList.BASAD){
+            System.err.println("!!!!!!!!!!!!!!!!!אנא הוסף בסד בתחילת התוכנית!!!!!!!!!!!!!!!!!");
+            System.exit(1);
+        }
+        this.Tokens.removeFirst();
     }
 
 
@@ -80,6 +84,7 @@ public class Parser {
         /*
         every Parse func should set the current token to be the last token of the Statement
          */
+
         switch (this.getCurrentToken()) {
             case TokenList.KEYWORD_EXIT -> {
                 return this.ParseExit();
@@ -114,6 +119,9 @@ public class Parser {
 
     private AstStatement ParseReturnStatement() throws ParserException,EofException{
         this.next();
+        if(this.getCurrentToken()==TokenList.SEMICOLON){
+            return new AstReturnStatement(null);
+        }
         AstExpression exp = ParseExpression();
         return new AstReturnStatement(exp);
     }

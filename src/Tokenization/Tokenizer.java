@@ -1,6 +1,8 @@
 package Tokenization;
 import Exceptions.TokenizerException;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
 /*
@@ -25,23 +27,28 @@ public class Tokenizer {
     );
     private final static Map<String, TokenList> statements = Map.ofEntries(
             Map.entry("שלם", TokenList.KEYWORD_INT),
-            Map.entry("ויהי-חושך", TokenList.KEYWORD_EXIT),
-            Map.entry("אם-יהיה", TokenList.KEYWORD_IF),
+            Map.entry("ויהי_חושך", TokenList.KEYWORD_EXIT),
+            Map.entry("אם_יהיה", TokenList.KEYWORD_IF),
             Map.entry("בעוד", TokenList.KEYWORD_WHILE),
             Map.entry("ויאמר", TokenList.PRINT_STRING),
-            Map.entry("ויאמר-שלם", TokenList.PRINT_INT),
+            Map.entry("ויאמר_שלם", TokenList.PRINT_INT),
             Map.entry("ויעש", TokenList.OPENING_BRACKET),
             Map.entry("ויתם", TokenList.CLOSING_BRACKET),
-            Map.entry("ויהי", TokenList.FUNCTION_DECLERATION),
+            Map.entry("ויברא", TokenList.FUNCTION_DECLERATION),
             Map.entry("תהו_ובהו", TokenList.VOID),
             Map.entry("ויקרא",TokenList.FUNCTION_CALL),
-            Map.entry("אמן",TokenList.KEYWORD_RETURN)
-
+            Map.entry("אמן",TokenList.KEYWORD_RETURN),
+            Map.entry("בסד",TokenList.BASAD)
     );
     public Tokenizer(String filePath) {
         this.current=0;
         this.file = new FileIO(filePath);//fileIO constructor exits program if file not found
         this.tokens=new ArrayList<>();
+        DayOfWeek localDay=LocalDate.now().getDayOfWeek();
+        if(localDay.getValue()==6){
+            System.err.println("!שבת היום!");
+            System.exit(1);
+        }
     }
 
     public void Tokenize(){

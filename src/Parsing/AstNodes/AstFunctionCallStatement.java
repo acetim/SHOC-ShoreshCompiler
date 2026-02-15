@@ -16,4 +16,13 @@ public class AstFunctionCallStatement extends AstStatement{
         this.funcName = funcName;
         this.args = args;
     }
+
+    @Override
+    public void print(String indent) {
+        System.out.print(indent+"call " +funcName+" args=");
+        for(AstExpression exp :args){
+            exp.print(indent);
+        }
+        System.out.println();
+    }
 }

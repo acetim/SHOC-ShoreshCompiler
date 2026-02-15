@@ -6,10 +6,10 @@ import Tokenization.Tokenizer;
 import java.util.ArrayList;
 
 public class AstFunctionDeclaration extends AstStatement{
-    private TokenList returnType;
-    private String name;
-    private ArrayList<AstParameter> parameters;
-    private AstCodeBlock body;
+    private final TokenList returnType;
+    private final String name;
+    private final ArrayList<AstParameter> parameters;
+    private final AstCodeBlock body;
 
     public AstFunctionDeclaration(TokenList returnType, ArrayList<AstParameter> parameters, String name, AstCodeBlock body) {
         super(TokenList.FUNCTION_DECLERATION);
@@ -29,6 +29,16 @@ public class AstFunctionDeclaration extends AstStatement{
 
     public ArrayList<AstParameter> getParameters() {
         return parameters;
+    }
+
+    @Override
+    public void print(String indent) {
+        System.out.print(indent+"func "+this.returnType.name()+" "+this.name+"( ");
+        for(AstParameter par : this.parameters){
+            par.print(indent);
+        }
+        System.out.println(")");
+        this.body.print(indent+"    ");
     }
 
     public String getName() {
