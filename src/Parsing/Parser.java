@@ -8,6 +8,10 @@ import Tokenization.token;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+/*
+parser is o(n) time complexity where n is the number of tokens it gets in Tokens
+ */
 public class Parser {
     private final ArrayList<token> Tokens;
     private int CurrentToken;

@@ -1,5 +1,6 @@
 package Parsing.AstNodes;
 
+import SemanticValidation.Visitor;
 import Tokenization.TokenList;
 
 public class AstExitStatement extends AstStatement{
@@ -23,5 +24,10 @@ public class AstExitStatement extends AstStatement{
         System.out.print(indent+"EXIT:");
         ExitCode.print(indent);
         System.out.println();
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.VisitAstExitStatement(this);
     }
 }

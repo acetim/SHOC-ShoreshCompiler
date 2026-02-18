@@ -1,5 +1,6 @@
 package Parsing.AstNodes;
 
+import SemanticValidation.Visitor;
 import Tokenization.TokenList;
 
 public class AstExpressionStatement extends AstStatement {
@@ -10,6 +11,11 @@ public class AstExpressionStatement extends AstStatement {
         super(TokenList.IDENTIFIER);
         this.identifier = identifier;
         this.expression = expression;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.VisitAstExpressionStatement(this);
     }
 
     @Override

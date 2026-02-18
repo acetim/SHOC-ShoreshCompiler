@@ -1,7 +1,8 @@
 package Parsing.AstNodes;
 
+import SemanticValidation.Visitor;
 import Tokenization.TokenList;
-import Tokenization.Tokenizer;
+
 
 import java.util.ArrayList;
 
@@ -29,6 +30,11 @@ public class AstFunctionDeclaration extends AstStatement{
 
     public ArrayList<AstParameter> getParameters() {
         return parameters;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.VisitAstFunctionDeclaration(this);
     }
 
     @Override

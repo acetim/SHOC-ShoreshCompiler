@@ -1,5 +1,7 @@
 package Parsing.AstNodes;
 
+import SemanticValidation.Visitor;
+
 public class AstIntDeclaration extends AstVarDeclaration {
     private AstExpression Expression;
 
@@ -14,6 +16,11 @@ public class AstIntDeclaration extends AstVarDeclaration {
 
     public void setExpression(AstExpression expression) {
         Expression = expression;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.VisitAstIntDeclaration(this);
     }
 
     @Override

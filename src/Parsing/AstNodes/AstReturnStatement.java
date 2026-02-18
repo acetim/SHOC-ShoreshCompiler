@@ -1,12 +1,13 @@
 package Parsing.AstNodes;
 
+import SemanticValidation.Visitor;
 import Tokenization.TokenList;
 /*
 IF RETURN HAS NO VALUE(VOID FUNC RETURN)
 returnExpression will have no value!!(will be null)
  */
 public class AstReturnStatement extends AstStatement{
-    private AstExpression returnExpression;
+    private final AstExpression returnExpression;
 
     public AstReturnStatement( AstExpression returnExpression) {
         super(TokenList.KEYWORD_RETURN);
@@ -15,6 +16,11 @@ public class AstReturnStatement extends AstStatement{
 
     public AstExpression getReturnExpression() {
         return returnExpression;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.VisitAstReturnStatement(this);
     }
 
     @Override

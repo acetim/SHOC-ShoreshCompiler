@@ -1,5 +1,6 @@
 package Parsing.AstNodes;
 
+import SemanticValidation.Visitor;
 import Tokenization.TokenList;
 
 public class AstStatement extends AstElement{
@@ -17,8 +18,16 @@ public class AstStatement extends AstElement{
         StatementType = statementType;
     }
 
+
+    @Override
+    public void accept(Visitor visitor) {
+        System.err.println("how did we get here?");
+        System.exit(1);
+    }
+
     @Override
     public void print(String indent) {
         System.out.println("how did we get here?");
     }
+
 }

@@ -1,5 +1,6 @@
 package Parsing.AstNodes;
 
+import SemanticValidation.Visitor;
 import Tokenization.TokenList;
 
 public class AstWhileStatement extends AstStatement{
@@ -26,6 +27,11 @@ public class AstWhileStatement extends AstStatement{
 
     public void setCodeBlock(AstCodeBlock codeBlock) {
         this.codeBlock = codeBlock;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.VisitAstWhileStatement(this);
     }
 
     @Override

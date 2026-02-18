@@ -1,11 +1,12 @@
 package Parsing.AstNodes;
 
+import SemanticValidation.Visitor;
 import Tokenization.token;
 
 import java.util.ArrayList;
 
 public class AstFunctionExpression extends AstExpression{
-    private ArrayList<AstExpression> arguments;
+    private final ArrayList<AstExpression> arguments;
 
     public AstFunctionExpression(token value, ArrayList<AstExpression> arguments) {
         super(value);
@@ -13,14 +14,13 @@ public class AstFunctionExpression extends AstExpression{
 
     }
 
-    public AstFunctionExpression(token value, AstExpression left, AstExpression right, ArrayList<AstExpression> arguments) {
-        super(value, left, right);
-        this.arguments = arguments;
-
-    }
-
     public ArrayList<AstExpression> getArguments() {
         return arguments;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.VisitAstFunctionExpression(this);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package Parsing.AstNodes;
 
+import SemanticValidation.Visitor;
 import Tokenization.TokenList;
 
 public class AstIfStatement extends AstStatement{
@@ -32,6 +33,11 @@ public class AstIfStatement extends AstStatement{
 
     public void setTrueBlock(AstCodeBlock trueBlock) {
         this.trueBlock = trueBlock;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.VisitAstIfStatement(this);
     }
 
     @Override

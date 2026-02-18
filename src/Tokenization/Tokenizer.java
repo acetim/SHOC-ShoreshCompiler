@@ -6,13 +6,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
 /*
+Tokenizer is o(n) time complexity where n is the number of chars in the file
+
 the tokenizer class takes a file path for its constructor and creates a tokenizer ready to tokenize file
 the class uses Tokenize() function to tokenize the file and store the tokens as an array list in the class
  */
 public class Tokenizer {
     private final FileIO file;
     private int current;//current char being processed
-    private ArrayList<token> tokens;
+    private final ArrayList<token> tokens;
     private final static Map<Character, TokenList> operators = Map.ofEntries(
             Map.entry('+', TokenList.OPERATOR_PLUS),
             Map.entry('-', TokenList.OPERATOR_MINUS),

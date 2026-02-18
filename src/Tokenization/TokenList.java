@@ -14,7 +14,6 @@ public enum TokenList {//if u want to add a keyword,an operator or whatever stat
     OPERATOR_GREATERTHAN,
     OPERATOR_SMALLERTHAN,
     SEMICOLON,
-    COMMENT,
     FUNCTION_DECLERATION,
     FUNCTION_CALL,
     KEYWORD_RETURN,
@@ -33,3 +32,8 @@ public enum TokenList {//if u want to add a keyword,an operator or whatever stat
 
 
 }
+
+
+
+
+

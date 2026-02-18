@@ -1,6 +1,7 @@
 package Parsing.AstNodes;
 
-import Parsing.Parser;
+
+import SemanticValidation.Visitor;
 import Tokenization.token;
 
 public class AstExpression extends AstElement{
@@ -35,6 +36,11 @@ public class AstExpression extends AstElement{
     public void print(String indent) {
         String exp = PARSER_TESTING.getPrefixString(this);
         System.out.print(exp+";");
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.VisitAstExpression(this);
     }
 
     @Override
