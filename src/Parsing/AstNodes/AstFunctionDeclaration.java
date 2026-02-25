@@ -1,5 +1,6 @@
 package Parsing.AstNodes;
 
+
 import SemanticValidation.Visitor;
 import Tokenization.TokenList;
 
@@ -7,6 +8,7 @@ import Tokenization.TokenList;
 import java.util.ArrayList;
 
 public class AstFunctionDeclaration extends AstStatement{
+    private int totalStackOffset;
     private final TokenList returnType;
     private final String name;
     private final ArrayList<AstParameter> parameters;
@@ -18,6 +20,10 @@ public class AstFunctionDeclaration extends AstStatement{
         this.parameters = parameters;
         this.name = name;
         this.body = body;
+    }
+
+    public void setTotalStackOffset(int totalStackOffset) {
+        this.totalStackOffset = totalStackOffset;
     }
 
     public TokenList getReturnType() {
