@@ -1,6 +1,6 @@
 package Parsing.AstNodes;
 
-import SemanticValidation.Visitor;
+import SemanticValidation.BasicComponents.Visitor;
 import Tokenization.TokenList;
 
 public class AstStatement extends AstElement{
@@ -22,6 +22,7 @@ public class AstStatement extends AstElement{
     @Override
     public void accept(Visitor visitor) {
         System.err.println("how did we get here?");
+        System.err.println("unimplemented accept() at"+ this.StatementType.name());
         System.exit(1);
     }
 

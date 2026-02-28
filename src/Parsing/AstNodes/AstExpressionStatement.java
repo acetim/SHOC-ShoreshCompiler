@@ -1,6 +1,6 @@
 package Parsing.AstNodes;
 
-import SemanticValidation.Visitor;
+import SemanticValidation.BasicComponents.Visitor;
 import Tokenization.TokenList;
 
 public class AstExpressionStatement extends AstStatement {
@@ -11,6 +11,14 @@ public class AstExpressionStatement extends AstStatement {
         super(TokenList.IDENTIFIER);
         this.identifier = identifier;
         this.expression = expression;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public AstExpression getExpression() {
+        return expression;
     }
 
     @Override

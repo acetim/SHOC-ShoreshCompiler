@@ -1,6 +1,6 @@
 package Parsing.AstNodes;
 
-import SemanticValidation.Visitor;
+import SemanticValidation.BasicComponents.Visitor;
 import Tokenization.TokenList;
 
 public class AstIfStatement extends AstStatement{

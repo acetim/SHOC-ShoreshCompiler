@@ -1,4 +1,4 @@
-package SemanticValidation;
+package SemanticValidation.SymbolTableVisitor;
 
 import Tokenization.TokenList;
 

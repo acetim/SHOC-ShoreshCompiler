@@ -1,7 +1,7 @@
 package Parsing.AstNodes;
 
-import SemanticValidation.SymbolTable;
-import SemanticValidation.Visitor;
+import SemanticValidation.SymbolTableVisitor.SymbolTable;
+import SemanticValidation.BasicComponents.Visitor;
 
 import java.util.ArrayList;
 

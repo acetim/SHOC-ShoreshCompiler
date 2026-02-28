@@ -1,6 +1,6 @@
 package Parsing.AstNodes;
 
-import SemanticValidation.Visitor;
+import SemanticValidation.BasicComponents.Visitor;
 
 public class AstIntDeclaration extends AstVarDeclaration {
     private AstExpression Expression;

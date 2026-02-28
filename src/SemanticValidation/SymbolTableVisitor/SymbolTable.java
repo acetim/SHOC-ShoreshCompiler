@@ -1,4 +1,4 @@
-package SemanticValidation;
+package SemanticValidation.SymbolTableVisitor;
 
 import java.util.HashMap;
 
@@ -12,13 +12,13 @@ public class SymbolTable {
     }
 
     public boolean SymbolExists(String identifier){
-        if (parent!=null) {
-            if (this.symbolTable.containsKey(identifier)) {
-                return true;
-            }
-            return this.parent.SymbolExists(identifier);
+        if(this.symbolTable.containsKey(identifier)){
+            return true;
         }
-        return false;
+        if(this.parent==null){
+            return false;
+        }
+        return this.parent.SymbolExists(identifier);
     }
 
     public SymbolTable getParent() {

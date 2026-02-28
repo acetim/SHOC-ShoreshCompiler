@@ -1,4 +1,4 @@
-package SemanticValidation;
+package SemanticValidation.BasicComponents;
 
 import Parsing.AstNodes.*;
 
@@ -24,4 +24,6 @@ public interface Visitor {
     void VisitAstFunctionExpression(AstFunctionExpression node);
 
     void VisitAstExpressionStatement(AstExpressionStatement node);
+
+
 }

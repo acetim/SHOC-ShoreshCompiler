@@ -1,4 +1,4 @@
-package SemanticValidation;
+package SemanticValidation.SymbolTableVisitor;
 
 import java.util.ArrayList;
 import Parsing.AstNodes.AstParameter;
@@ -12,6 +12,7 @@ public class FunctionSymbol {
         this.parameters = new ArrayList<>();
         this.returnType = returnType;
     }
+
     public void addParam(AstParameter a){
         this.parameters.add(a);
     }

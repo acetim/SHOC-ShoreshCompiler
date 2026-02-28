@@ -1,6 +1,6 @@
 package Parsing.AstNodes;
 
-import SemanticValidation.Visitor;
+import SemanticValidation.BasicComponents.Visitor;
 import Tokenization.TokenList;
 
 
@@ -16,6 +16,14 @@ public class AstFunctionCallStatement extends AstStatement{
         super(TokenList.FUNCTION_CALL);
         this.funcName = funcName;
         this.args = args;
+    }
+
+    public String getFuncName() {
+        return funcName;
+    }
+
+    public ArrayList<AstExpression> getArgs() {
+        return args;
     }
 
     @Override
