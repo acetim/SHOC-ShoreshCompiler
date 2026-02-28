@@ -16,4 +16,7 @@ public class SemanticErrorHandler {
             System.err.println(err);
         }
     }
+    public boolean errorsPresent(){
+        return !errors.isEmpty();
+    }
 }

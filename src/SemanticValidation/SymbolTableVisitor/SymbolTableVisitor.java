@@ -16,6 +16,15 @@ public class SymbolTableVisitor implements Visitor {
         this.globalSymbolTable= new GlobalSymbolTable();
         this.currentScope=this.globalSymbolTable.getGlobalScope();
     }
+
+    public void visit(AstCodeBlock root){
+        root.accept(this);
+        if(this.errorHandler.errorsPresent()){
+            this.errorHandler.printAllErrors();
+            System.exit(1);
+        }
+    }
+
     //TODO check if after each scope defining statement(while,if,funcDec) i backtrack and return the currentScope to be the parent
     @Override
     public void VisitAstFunctionDeclaration(AstFunctionDeclaration node){

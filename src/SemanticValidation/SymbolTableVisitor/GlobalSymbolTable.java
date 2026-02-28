@@ -16,6 +16,7 @@ public class GlobalSymbolTable {
     public FunctionSymbol getFunc(String s) {
             return this.functions.get(s);
     }
+
     public void defineFunc(FunctionSymbol fs,String name){
         this.functions.put(name,fs);
     }
