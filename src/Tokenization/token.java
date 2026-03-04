@@ -25,6 +25,7 @@ public class token {
             TokenList.OPERATOR_AND
     );
     //MODIFY THIS TO ADD OPERATORS TO PRATT PARSE^^^^^^
+    //TODO UPDATE THIS VVVV TO BETTER DETECT SYNTAX ERRS
     public static Set<TokenList> statements=Set.of(
             TokenList.KEYWORD_INT,
             TokenList.KEYWORD_EXIT,
@@ -35,10 +36,12 @@ public class token {
 
     private final TokenList token;
     private final String value;
+    private final int line;
 
-    public token(String value,TokenList token) {
+    public token(String value,TokenList token,int line) {
         this.value = value;
         this.token=token;
+        this.line=line;
     }
     @Override
     public String toString() {
@@ -51,4 +54,7 @@ public class token {
         return value;
     }
 
+    public int getLine() {
+        return line;
+    }
 }

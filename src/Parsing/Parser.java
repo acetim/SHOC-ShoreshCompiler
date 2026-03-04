@@ -74,7 +74,7 @@ public class Parser {
             }
         }
         if(IsNestedParse) {
-            throw new EofException("צדיק שחכת להוסיף 'ויתם' בסוף הפרק! המתחיל במצווה – אומרים לו גמור ");
+            throw new EofException("צדיק שכחת להוסיף 'ויתם' בסוף הפרק! המתחיל במצווה – אומרים לו גמור ");
         }
     }
     ///////////////////////////////////////////////////////////////ParserAPI
@@ -115,7 +115,7 @@ public class Parser {
                 return this.ParseReturnStatement();
             }
             default -> {
-                this.errorHandler.reportError("צדיק, זוהתה מילה לא נכונה אנא תקן!");
+                this.errorHandler.reportError("צדיק, זוהתה מילה לא נכונה אנא תקן!",this.getCurrentLine());
                 return null;
             }
         }
@@ -134,7 +134,7 @@ public class Parser {
         String varName =this.Tokens.get(this.CurrentToken).getValue();
         next();
         if(!CurrentTokenIsEqualTo(TokenList.OPERATOR_EQUALS)){
-            this.errorHandler.reportError("צדיק שכחת להוסיף '=' בביטוי ההשוואה!");
+            this.errorHandler.reportError("צדיק שכחת להוסיף '=' בביטוי ההשוואה!",this.getCurrentLine());
         }
         next();
         AstExpression expression = ParseExpression();
@@ -148,20 +148,20 @@ public class Parser {
          */
         this.next();
         if(!token.types.contains(this.getCurrentToken())&&this.getCurrentToken()!=TokenList.VOID){
-            this.errorHandler.reportError("לכל מעשה מעשה יש תוצאה! - אנא ציין את סוג ההחזרה של המעשה");
+            this.errorHandler.reportError("לכל מעשה מעשה יש תוצאה! - אנא ציין את סוג ההחזרה של המעשה",this.getCurrentLine());
         }
         TokenList returnType = this.getCurrentToken();
 
         this.next();
         if(this.getCurrentToken()!=TokenList.IDENTIFIER){
-            this.errorHandler.reportError("לכל מעשה יש שם!- אנא ציין את שם המעשה");
+            this.errorHandler.reportError("לכל מעשה יש שם!- אנא ציין את שם המעשה",this.getCurrentLine());
         }
         String funcName = this.Tokens.get(this.CurrentToken).getValue();
 
         ArrayList<AstParameter> parameters= new ArrayList<>();
         this.next();
         if(this.getCurrentToken()!=TokenList.OPENING_ROUND_BRACKET){
-            this.errorHandler.reportError("ציפה ל '(' לאחר הכרזת שם הפונקציה");
+            this.errorHandler.reportError("ציפה ל '(' לאחר הכרזת שם הפונקציה",this.getCurrentLine());
         }
         this.next();
         while(this.getCurrentToken()!=TokenList.CLOSING_ROUND_BRACKET){
@@ -189,7 +189,7 @@ public class Parser {
     private AstStatement ParseIntDeclaration() throws ParserException,EofException{
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.IDENTIFIER)){
-            this.errorHandler.reportError("ציפיתי ממך לשם נורמלי למשתנה שהגדרת!");
+            this.errorHandler.reportError("ציפיתי ממך לשם נורמלי למשתנה שהגדרת!",this.getCurrentLine());
         }
         String intName = this.Tokens.get(this.CurrentToken).getValue();
         this.next();
@@ -197,7 +197,7 @@ public class Parser {
             return new AstIntDeclaration(intName,32,null);
         }
         if(!CurrentTokenIsEqualTo(TokenList.OPERATOR_EQUALS)){
-            this.errorHandler.reportError("הגדרת משתנה צריכה להגמר ב ';' או ב '=' ואז הגדרת הערך");
+            this.errorHandler.reportError("הגדרת משתנה צריכה להגמר ב ';' או ב '=' ואז הגדרת הערך",this.getCurrentLine());
         }
         this.next();
         AstExpression expression = ParseExpression();//ends at semicolon token
@@ -207,13 +207,13 @@ public class Parser {
     private AstStatement ParseWhileStatement() throws ParserException,EofException{
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
-            this.errorHandler.reportError("שחכת להוסיף '(' אחרי הכרזת בעוד");
+            this.errorHandler.reportError("שחכת להוסיף '(' אחרי הכרזת בעוד",this.getCurrentLine());
         }
         this.next();
         AstExpression Condition = ParseExpression();
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
-            this.errorHandler.reportError("שחכת להוסיף ')' בסוף הכרזת בעוד");
+            this.errorHandler.reportError("שחכת להוסיף ')' בסוף הכרזת בעוד",this.getCurrentLine());
         }
         this.next();
         AstCodeBlock CodeBlock =ParseCodeBlock();
@@ -224,13 +224,13 @@ public class Parser {
     private AstStatement ParseExit() throws ParserException,EofException{
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
-            this.errorHandler.reportError("שחכת להוסיף '(' אחרי הכרזת ויהי חושך");
+            this.errorHandler.reportError("שחכת להוסיף '(' אחרי הכרזת ויהי חושך",this.getCurrentLine());
         }
         this.next();
         AstExpression ExitCode = ParseExpression();
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
-            this.errorHandler.reportError("שחכת להוסיף ')' בסוף הכרזת ויהי חושך");
+            this.errorHandler.reportError("שחכת להוסיף ')' בסוף הכרזת ויהי חושך",this.getCurrentLine());
         }
         return new AstExitStatement(ExitCode);
 
@@ -239,13 +239,13 @@ public class Parser {
     private AstStatement ParseIfStatement() throws ParserException,EofException{//throw exceptions
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.OPENING_ROUND_BRACKET)){
-            this.errorHandler.reportError("שחכת להוסיף '(' אחרי הכרזת אם יהיה");
+            this.errorHandler.reportError("שחכת להוסיף '(' אחרי הכרזת אם יהיה",this.getCurrentLine());
         }
         this.next();
         AstExpression Condition = ParseExpression();
         this.next();
         if(!CurrentTokenIsEqualTo(TokenList.CLOSING_ROUND_BRACKET)){
-            this.errorHandler.reportError("שחכת להוסיף ')' בסוף הכרזת אם יהיה");
+            this.errorHandler.reportError("שחכת להוסיף ')' בסוף הכרזת אם יהיה",this.getCurrentLine());
         }
         this.next();
         AstCodeBlock TrueBlock =ParseCodeBlock();
@@ -255,7 +255,7 @@ public class Parser {
 
     private AstCodeBlock ParseCodeBlock() throws ParserException,EofException{
         if(!CurrentTokenIsEqualTo(TokenList.OPENING_BRACKET)){
-            this.errorHandler.reportError("ויעש צופה בתחילת הפרק");
+            this.errorHandler.reportError("ויעש צופה בתחילת הפרק",this.getCurrentLine());
         }
         ArrayList<AstStatement> Statements = new ArrayList<>();
         this.next();
@@ -272,7 +272,7 @@ public class Parser {
         AstExpression exp = PrattParse(0.0);
         this.next();//end at the semicolon or send error if ')'
         if(this.getCurrentToken()==TokenList.CLOSING_ROUND_BRACKET){
-            this.errorHandler.reportError("צדיק, שכחת להוסיף ';' בסוף הביטוי!");
+            this.errorHandler.reportError("צדיק, שכחת להוסיף ';' בסוף הביטוי!",this.getCurrentLine());
         }
         return exp;
     }
@@ -290,7 +290,7 @@ public class Parser {
         ArrayList<AstExpression> args= new ArrayList<>();
         this.next();
         if(this.getCurrentToken()!=TokenList.OPENING_ROUND_BRACKET){
-            this.errorHandler.reportError("ציפה ל '(' בקריאה לפונקציה");
+            this.errorHandler.reportError("ציפה ל '(' בקריאה לפונקציה",this.getCurrentLine());
         }
         this.next();
         while(this.getCurrentToken()!=TokenList.CLOSING_ROUND_BRACKET){
@@ -317,11 +317,11 @@ public class Parser {
             lhs =PrattParse(0.0);
             this.next();
             if(this.getCurrentToken()==TokenList.SEMICOLON){
-                this.errorHandler.reportError("צדיק, שחכת לסגור סוגריים כמו שצריך בביטוי");
+                this.errorHandler.reportError("צדיק, שחכת לסגור סוגריים כמו שצריך בביטוי",this.getCurrentLine());
             }
         }
         else{
-            this.errorHandler.reportError("צופה מספר או משתנה בביטוי");
+            this.errorHandler.reportError("צופה מספר או משתנה בביטוי",this.getCurrentLine());
         }
 
         while(true){//standard practice implementing pratt parsing
@@ -330,7 +330,7 @@ public class Parser {
             }
 
             if(!isOp(this.peek().getToken())) {//if wrong Tokenization.token is detected throw error
-                this.errorHandler.reportError("צופתה פעולה בביטוי");
+                this.errorHandler.reportError("צופתה פעולה בביטוי",this.getCurrentLine());
             }
 
 
@@ -353,12 +353,12 @@ public class Parser {
 
     private AstParameter ParseParameter()throws ParserException,EofException{
         if(!token.types.contains(this.getCurrentToken())){
-            this.errorHandler.reportError("ציפה לסוג פרמטר בפונקציה");
+            this.errorHandler.reportError("ציפה לסוג פרמטר בפונקציה",this.getCurrentLine());
         }
         TokenList type = this.getCurrentToken();
         this.next();
         if(this.getCurrentToken()!=TokenList.IDENTIFIER){
-            this.errorHandler.reportError("ציפה לשם הארגומנט בפונקצייה");
+            this.errorHandler.reportError("ציפה לשם הארגומנט בפונקצייה",this.getCurrentLine());
         }
         String name = this.Tokens.get(this.CurrentToken).getValue();
         return new AstParameter(type,name);
@@ -399,13 +399,25 @@ public class Parser {
         }
     }
 
+    private int getCurrentLine(){
+        return this.Tokens.get(this.CurrentToken).getLine();
+    }
+
     ///////////////////////////////////////////////////////////helper functions
 
 
 
     ///////////////////////////////////////////////////////////panic mode
     private void Sync()throws EofException {
+        int nestCounter=0;
         do {
+            if(this.getCurrentToken()==TokenList.OPENING_ROUND_BRACKET){
+                nestCounter+=1;
+            }
+            if(this.getCurrentToken()==TokenList.CLOSING_BRACKET){
+                if(nestCounter==0){return;}
+                nestCounter-=1;
+            }
             this.next();//skip until a new statement is detected
         } while (!token.statements.contains(getCurrentToken()));
     }

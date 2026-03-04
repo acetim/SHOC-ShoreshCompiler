@@ -15,6 +15,7 @@ public class Tokenizer {
     private final FileIO file;
     private int current;//current char being processed
     private final ArrayList<token> tokens;
+    private int lineCount;
     private final static Map<Character, TokenList> operators = Map.ofEntries(
             Map.entry('+', TokenList.OPERATOR_PLUS),
             Map.entry('-', TokenList.OPERATOR_MINUS),
@@ -46,6 +47,7 @@ public class Tokenizer {
     );
     public Tokenizer(String filePath) {
         this.current=0;
+        this.lineCount=0;
         this.file = new FileIO(filePath);//fileIO constructor exits program if file not found
         this.tokens=new ArrayList<>();
         DayOfWeek localDay=LocalDate.now().getDayOfWeek();
@@ -66,6 +68,7 @@ public class Tokenizer {
             while((line=this.file.nextLine())!=null){
                 this.current=0;
                 TokenizeLine(line);
+                this.lineCount++;
             }
             this.file.closeIO();
             System.out.println("\u001B[32m" + "טוקניזציה הסתיימה בהצלחה" + "\u001B[0m");
@@ -90,13 +93,13 @@ public class Tokenizer {
                 continue;
             }
             if(operators.containsKey(c)){
-                this.tokens.add(new token(String.valueOf(c),operators.get(c)));
+                this.tokens.add(new token(String.valueOf(c),operators.get(c),this.lineCount));
                 this.current++;
                 continue;
             }
             if(Character.isDigit(c)){
                 String number = TokenizeNumberLiteral(code);
-                this.tokens.add(new token(number,TokenList.NUMBER));
+                this.tokens.add(new token(number,TokenList.NUMBER,this.lineCount));
                 continue;
             }
             if(Character.isAlphabetic(c)){
@@ -105,7 +108,7 @@ public class Tokenizer {
             }
             if(c=='"'){
                 String StringLiteral=TokenizeStringLiteral(code);
-                this.tokens.add(new token(StringLiteral,TokenList.STRING_LITERAL));
+                this.tokens.add(new token(StringLiteral,TokenList.STRING_LITERAL,this.lineCount));
                 continue;
             }
             throw new TokenizerException(c+" :תו לא ברור זוהה");
@@ -151,9 +154,9 @@ public class Tokenizer {
             current++;
         }
         if(statements.containsKey(buf)){
-            return new token(buf,statements.get(buf));
+            return new token(buf,statements.get(buf),this.lineCount);
         }
-        return new token(buf,TokenList.IDENTIFIER);
+        return new token(buf,TokenList.IDENTIFIER,this.lineCount);
     }
 
     public ArrayList<token> getTokens() {

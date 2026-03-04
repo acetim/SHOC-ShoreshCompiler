@@ -13,8 +13,8 @@ public class ParserErrorHandler {
         this.ErrorsPresent=false;
     }
 
-    public void reportError(String message) throws ParserException{
-        errors.add(message);
+    public void reportError(String message,int AtLine) throws ParserException{
+        errors.add("בשורה "+(AtLine+1)+" "+message);
         this.ErrorsPresent=true;
         throw new ParserException(message);
     }
