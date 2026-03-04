@@ -40,7 +40,9 @@ public class Tokenizer {
             Map.entry("תהו_ובהו", TokenList.VOID),
             Map.entry("ויקרא",TokenList.FUNCTION_CALL),
             Map.entry("אמן",TokenList.KEYWORD_RETURN),
-            Map.entry("בסד",TokenList.BASAD)
+            Map.entry("בסד",TokenList.BASAD),
+            Map.entry("וגם",TokenList.OPERATOR_AND),
+            Map.entry("או",TokenList.OPERATOR_OR)
     );
     public Tokenizer(String filePath) {
         this.current=0;

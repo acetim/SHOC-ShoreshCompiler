@@ -4,26 +4,23 @@ import SemanticValidation.BasicComponents.Visitor;
 import Tokenization.TokenList;
 
 
-import java.util.ArrayList;
 /*
 USED FOR VOID FUNCTION CALLS
  */
 public class AstFunctionCallStatement extends AstStatement{
-    private final String funcName;
-    private final ArrayList<AstExpression> args;
 
-    public AstFunctionCallStatement(String funcName, ArrayList<AstExpression> args) {
+
+    private final AstFunctionExpression func;
+    public AstFunctionCallStatement(AstFunctionExpression func) {
         super(TokenList.FUNCTION_CALL);
-        this.funcName = funcName;
-        this.args = args;
+        this.func=func;
     }
 
-    public String getFuncName() {
-        return funcName;
+    public AstFunctionExpression getFunc() {
+        return func;
     }
-
-    public ArrayList<AstExpression> getArgs() {
-        return args;
+    public String getName(){
+        return this.func.getName();
     }
 
     @Override
@@ -33,8 +30,8 @@ public class AstFunctionCallStatement extends AstStatement{
 
     @Override
     public void print(String indent) {
-        System.out.print(indent+"call " +funcName+" args=");
-        for(AstExpression exp :args){
+        System.out.print(indent+"call " +this.getName()+" args=");
+        for(AstExpression exp :this.func.getArguments()){
             exp.print(indent);
         }
         System.out.println();

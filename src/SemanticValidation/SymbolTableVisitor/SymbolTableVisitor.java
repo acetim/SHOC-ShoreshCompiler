@@ -6,8 +6,8 @@ import SemanticValidation.BasicComponents.TypeTable;
 import SemanticValidation.BasicComponents.Visitor;
 import Tokenization.TokenList;
 public class SymbolTableVisitor implements Visitor {
-    private SemanticErrorHandler errorHandler;
-    private GlobalSymbolTable globalSymbolTable;
+    private final SemanticErrorHandler errorHandler;
+    private final GlobalSymbolTable globalSymbolTable;
     private SymbolTable currentScope;
     private int currentTotalStackOffset;
     public SymbolTableVisitor() {
@@ -132,10 +132,10 @@ public class SymbolTableVisitor implements Visitor {
 
     @Override
     public void VisitAstFunctionCallStatement(AstFunctionCallStatement node) {
-        if(!this.globalSymbolTable.funcExists(node.getFuncName())){
-            this.errorHandler.add("נקרא אך לא הוגדר"+node.getFuncName()+" מעשה");
+        if(!this.globalSymbolTable.funcExists(node.getName())){
+            this.errorHandler.add("נקרא אך לא הוגדר "+node.getName()+" מעשה");
         }
-        for(AstExpression param:node.getArgs()){
+        for(AstExpression param:node.getFunc().getArguments()){
             param.accept(this);
         }
     }

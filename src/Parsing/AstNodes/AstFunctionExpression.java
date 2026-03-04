@@ -7,17 +7,24 @@ import java.util.ArrayList;
 
 public class AstFunctionExpression extends AstExpression{
     private final ArrayList<AstExpression> arguments;
-
-    public AstFunctionExpression(token value, ArrayList<AstExpression> arguments) {
+    private final boolean VoidExpected;
+    public AstFunctionExpression(token value, ArrayList<AstExpression> arguments,boolean voidExpected) {
         super(value);
         this.arguments = arguments;
-
+        this.VoidExpected=voidExpected;
     }
 
     public ArrayList<AstExpression> getArguments() {
         return arguments;
     }
 
+    public boolean isVoidExpected() {
+        return VoidExpected;
+    }
+
+    public String getName(){
+        return this.getToken().getValue();
+    }
     @Override
     public void accept(Visitor visitor) {
         visitor.VisitAstFunctionExpression(this);

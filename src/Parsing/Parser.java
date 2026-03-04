@@ -182,21 +182,8 @@ public class Parser {
         sets the current token to be the last token of the expression
          */
         this.next();
-        if(this.getCurrentToken()!=TokenList.IDENTIFIER){
-            this.errorHandler.reportError("ציפה לשם פונקציה אחרי ויקרא");
-        }
-        String funcName = this.Tokens.get(this.CurrentToken).getValue();
-        this.next();
-        if(this.getCurrentToken()!=TokenList.OPENING_ROUND_BRACKET){
-            this.errorHandler.reportError(" ציפה ל '(' אחרי שם הפונקציה");
-        }
-        this.next();
-        ArrayList<AstExpression> args= new ArrayList<>();
-        while(this.getCurrentToken()!=TokenList.CLOSING_ROUND_BRACKET){
-            args.add(this.ParseExpression());
-            this.next();
-        }
-        return new AstFunctionCallStatement(funcName,args);
+        AstFunctionExpression func = this.ParseFunctionExpression(true);
+        return new AstFunctionCallStatement(func);
     }
 
     private AstStatement ParseIntDeclaration() throws ParserException,EofException{
@@ -290,14 +277,14 @@ public class Parser {
         return exp;
     }
 
-    private AstExpression ParseFunctionExpression() throws ParserException,EofException{
+    private AstFunctionExpression ParseFunctionExpression(boolean VoidExpected) throws ParserException,EofException{
         /*
         parses functionExpressions - used whe calling functions inside expressions
         or when calling functions that return void with 'ויעש'
 
         should get called on the identifier of a function
         returns an AstFunctionExpression that contains the arguments and the identifier token of the function
-        sets the currentToken counter to be the closing round bracket of th call
+        sets the currentToken counter to be the closing round bracket of the call
          */
         token tok = this.Tokens.get(this.CurrentToken);
         ArrayList<AstExpression> args= new ArrayList<>();
@@ -310,7 +297,7 @@ public class Parser {
             args.add(this.ParseExpression());
             this.next();
         }
-        return new AstFunctionExpression(tok,args);
+        return new AstFunctionExpression(tok,args,VoidExpected);
 
     }
 
@@ -318,7 +305,7 @@ public class Parser {
 
         AstExpression lhs=null;
         if(this.getCurrentToken()==TokenList.IDENTIFIER&&this.peek().getToken()==TokenList.OPENING_ROUND_BRACKET){
-            lhs= ParseFunctionExpression();
+            lhs= ParseFunctionExpression(false);
         }
         else if(IsAtom()) {
             lhs = new AstExpression(Tokens.get(this.CurrentToken));
