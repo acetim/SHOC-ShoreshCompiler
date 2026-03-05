@@ -32,7 +32,7 @@ public class AstFunctionExpression extends AstExpression{
 
     @Override
     public String toString() {
-        String s ="";
+        String s ="FUNCEXP";
         s+=this.getToken().getValue()+"(";
         for (AstExpression arg :this.arguments){
             s+=PARSER_TESTING.getPrefixString(arg);

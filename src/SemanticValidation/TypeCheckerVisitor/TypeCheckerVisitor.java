@@ -20,6 +20,13 @@ public class TypeCheckerVisitor implements Visitor {
         this.currentFunc=null;
         this.currentFuncName = "";
     }
+    public void visit(AstCodeBlock root){
+        root.accept(this);
+        if(this.errorHandler.errorsPresent()){
+            this.errorHandler.printAllErrors();
+            System.exit(1);
+        }
+    }
 
     @Override
     public void VisitAstFunctionDeclaration(AstFunctionDeclaration node) {
@@ -35,7 +42,7 @@ public class TypeCheckerVisitor implements Visitor {
         }
         if(this.currentFunc.getReturnType()!= TokenList.VOID&&!funcHasReturn){
             //exit if func is not of void type and does not return
-            this.errorHandler.add("לא מחזיר כלום "+node.getName()+" המעשה");
+            this.errorHandler.add("המעשה "+node.getName()+" לא מחזיר כלום ");
         }
 
         node.getBody().accept(this);
@@ -53,7 +60,10 @@ public class TypeCheckerVisitor implements Visitor {
     @Override
     public void VisitAstReturnStatement(AstReturnStatement node) {
         if (node.getReturnExpression()==null && this.currentFunc.getReturnType()!=TokenList.VOID){//if return is none but func isnt void
-            this.errorHandler.add("להחזיר ערך אך קיבל כלום "+this.currentFuncName+" צופה מאמן בתוך מעשה");
+            this.errorHandler.add("צופה מאמן בתוך מעשה "+this.currentFuncName+" להחזיר ערך אך קיבל כלום ");
+        }
+        if(node.getReturnExpression()!=null){
+            node.getReturnExpression().accept(this);
         }
         //TODO assuming all int types so no need to check
         //implement this when introducing new types
@@ -65,7 +75,7 @@ public class TypeCheckerVisitor implements Visitor {
         FunctionSymbol functionSymbol = this.globalSymbolTable.getFunc(node.getName());
 
         if(functionSymbol.getReturnType()!=TokenList.VOID){//check if func returns void
-            this.errorHandler.add("שלא מחזיר תהו ובהו "+node.getName()+" אי אפשר לקרוא קריאת ויקרא על המעשה");
+            this.errorHandler.add("אי אפשר לקרוא קריאת ויקרא על המעשה "+node.getName()+" שלא מחזיר תהו ובהו ");
         }
 
         node.getFunc().accept(this);
@@ -76,7 +86,7 @@ public class TypeCheckerVisitor implements Visitor {
         TokenList topLevelOperator = node.getCondition().getToken().getToken();
         //ASSUMING ALL INT TYPES
         if(!token.logicOps.contains(topLevelOperator)){//check if top level operator gives a boolean output
-            this.errorHandler.add(" בעוד חייב לקבל ביוטי שמביא ערך בוליאני "+this.currentFuncName+" :במעשה");
+            this.errorHandler.add(":במעשה "+this.currentFuncName+" בעוד חייב לקבל ביוטי שמביא ערך בוליאני ");
         }
         node.getCodeBlock().accept(this);
     }
@@ -86,7 +96,7 @@ public class TypeCheckerVisitor implements Visitor {
         TokenList topLevelOperator = node.getCondition().getToken().getToken();
         //ASSUMING ALL INT TYPES
         if(!token.logicOps.contains(topLevelOperator)){//check if top level operator gives a boolean output
-            this.errorHandler.add(" בעוד חייב לקבל ביוטי שמביא ערך בוליאני "+this.currentFuncName+" :במעשה");
+            this.errorHandler.add(":במעשה "+this.currentFuncName+" בעוד חייב לקבל ביוטי שמביא ערך בוליאני ");
         }
         node.getTrueBlock().accept(this);
     }
@@ -114,11 +124,11 @@ public class TypeCheckerVisitor implements Visitor {
         FunctionSymbol funcSymbol = this.globalSymbolTable.getFunc(node.getName());
         //ASSUMING ALL INT TYPES!!!
         if(!node.isVoidExpected()&&funcSymbol.getReturnType()==TokenList.VOID){//err if - expression not expects void but gets void
-            this.errorHandler.add("וצופה ממנו להחזיר ערך, אך מחזיר תהו ובהו "+node.getName()+" נקרא המעשה "+this.currentFuncName+" :במעשה");
+            this.errorHandler.add(" במעשה"+this.currentFuncName+" נקרא המעשה "+node.getName()+"וצופה ממנו להחזיר ערך, אך מחזיר תהו ובהו ");
         }
         //ASSUMING ALL INT TYPES!!!
         if(funcSymbol.getParameters().size()!=node.getArguments().size()){
-            this.errorHandler.add("אך כמות הפרמטרים שקיבל אינה נכונה "+node.getName()+" נקרא המעשה "+this.currentFuncName+" :במעשה");
+            this.errorHandler.add(" במעשה"+this.currentFuncName+" נקרא המעשה "+node.getName()+"אך כמות הפרמטרים שקיבל אינה נכונה ");
         }
         if(node.getLeft()!=null){node.getLeft().accept(this);}
         if(node.getRight()!=null){node.getRight().accept(this);}

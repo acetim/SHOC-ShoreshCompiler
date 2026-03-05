@@ -3,7 +3,7 @@ package SemanticValidation.BasicComponents;
 import java.util.ArrayList;
 
 public class SemanticErrorHandler {
-    private ArrayList<String> errors;
+    private final ArrayList<String> errors;
 
     public SemanticErrorHandler() {
         this.errors = new ArrayList<>();
@@ -12,6 +12,7 @@ public class SemanticErrorHandler {
         this.errors.add(err);
     }
     public void printAllErrors(){
+        System.err.println("!!זוהו בעיות סמנטיות!!");
         for(String err:this.errors){
             System.err.println(err);
         }
@@ -19,4 +20,5 @@ public class SemanticErrorHandler {
     public boolean errorsPresent(){
         return !errors.isEmpty();
     }
+
 }

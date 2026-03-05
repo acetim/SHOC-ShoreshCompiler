@@ -25,11 +25,12 @@ public class SymbolTableVisitor implements Visitor {
         }
     }
 
+
     //TODO check if after each scope defining statement(while,if,funcDec) i backtrack and return the currentScope to be the parent
     @Override
     public void VisitAstFunctionDeclaration(AstFunctionDeclaration node){
         if(this.currentScope!=this.globalSymbolTable.getGlobalScope()){
-            this.errorHandler.add("!הוגדר התוך מעשה אחר "+node.getName()+" מעשה:");
+            this.errorHandler.add("מעשה: "+node.getName()+" !הוגדר התוך מעשה אחר ");
         }
 
         FunctionSymbol functionSymbol = new FunctionSymbol(node.getReturnType());
@@ -72,9 +73,10 @@ public class SymbolTableVisitor implements Visitor {
 
     @Override
     public void VisitAstExpression(AstExpression node){//checks for undefined vars
+
         if(node.getToken().getToken()== TokenList.IDENTIFIER){//if var
            if(!this.currentScope.SymbolExists(node.getToken().getValue())){//check if var exists
-               errorHandler.add("לא הוגדר "+node.getToken().getValue()+" משתנה");
+               errorHandler.add("משתנה "+node.getToken().getValue()+" לא הוגדר");
            }
         }
         if(node.getLeft()!=null){node.getLeft().accept(this);}
@@ -84,8 +86,9 @@ public class SymbolTableVisitor implements Visitor {
 
     @Override
     public void VisitAstFunctionExpression(AstFunctionExpression node){
-        if(this.globalSymbolTable.funcExists(node.getToken().getValue())){
-            this.errorHandler.add("לא מוגדר "+node.getToken().getValue()+" מעשה");
+
+        if(!this.globalSymbolTable.funcExists(node.getToken().getValue())){
+            this.errorHandler.add("מעשה "+node.getToken().getValue()+" לא מוגדר");
         }
 
         for(AstExpression exp:node.getArguments()){//check for undefined args
@@ -104,7 +107,7 @@ public class SymbolTableVisitor implements Visitor {
     @Override
     public void VisitAstExpressionStatement(AstExpressionStatement node) {
         if(!this.currentScope.SymbolExists(node.getIdentifier())){
-            errorHandler.add("לא הוגדר "+node.getIdentifier()+" משתנה");
+            errorHandler.add("משתנה "+node.getIdentifier()+" לא הוגדר");
         }
         node.getExpression().accept(this);
 
@@ -133,7 +136,7 @@ public class SymbolTableVisitor implements Visitor {
     @Override
     public void VisitAstFunctionCallStatement(AstFunctionCallStatement node) {
         if(!this.globalSymbolTable.funcExists(node.getName())){
-            this.errorHandler.add("נקרא אך לא הוגדר "+node.getName()+" מעשה");
+            this.errorHandler.add("מעשה "+node.getName()+" נקרא אך לא הוגדר ");
         }
         for(AstExpression param:node.getFunc().getArguments()){
             param.accept(this);
@@ -142,13 +145,22 @@ public class SymbolTableVisitor implements Visitor {
 
     @Override
     public void VisitAstReturnStatement(AstReturnStatement node) {
-        node.getReturnExpression().accept(this);
+        if(node.getReturnExpression()!=null) {
+            node.getReturnExpression().accept(this);
+        }
     }
 
     @Override
     public void VisitAstIntDeclaration(AstIntDeclaration node) {
-        this.currentTotalStackOffset-=4;//ASSUMING ALL INT TYPES
-        Symbol symbol = new Symbol(node.getVarName(),currentTotalStackOffset,TokenList.KEYWORD_INT);
-        this.currentScope.addToTable(symbol);
+            this.currentTotalStackOffset -= 4;//ASSUMING ALL INT TYPES
+            Symbol symbol = new Symbol(node.getVarName(), currentTotalStackOffset, TokenList.KEYWORD_INT);
+            this.currentScope.addToTable(symbol);
+            if(node.getExpression()!=null){
+                node.getExpression().accept(this);
+            }
+    }
+
+    public GlobalSymbolTable getGlobalSymbolTable() {
+        return globalSymbolTable;
     }
 }
