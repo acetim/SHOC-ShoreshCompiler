@@ -3,8 +3,8 @@ package SemanticValidation.SymbolTableVisitor;
 import java.util.HashMap;
 
 public class SymbolTable {
-    private SymbolTable parent;
-    private HashMap<String,Symbol> symbolTable;
+    private final SymbolTable parent;
+    private final HashMap<String,Symbol> symbolTable;
 
     public SymbolTable(SymbolTable parent) {
         this.parent = parent;
@@ -28,4 +28,10 @@ public class SymbolTable {
     public void addToTable(Symbol s){
         this.symbolTable.put(s.getName(),s);
     }
+    public void printSymbolTable(){
+        for(Symbol s: this.symbolTable.values()){
+            System.out.println(s.toString());
+        }
+    }
+
 }

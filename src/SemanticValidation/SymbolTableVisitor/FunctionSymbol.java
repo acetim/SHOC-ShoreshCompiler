@@ -2,11 +2,12 @@ package SemanticValidation.SymbolTableVisitor;
 
 import java.util.ArrayList;
 import Parsing.AstNodes.AstParameter;
+import Parsing.AstNodes.AstStatement;
 import Tokenization.TokenList;
 
 public class FunctionSymbol {
-    private ArrayList<AstParameter> parameters;
-    private TokenList returnType;
+    private final ArrayList<AstParameter> parameters;
+    private final TokenList returnType;
 
     public FunctionSymbol( TokenList returnType) {
         this.parameters = new ArrayList<>();
@@ -23,5 +24,16 @@ public class FunctionSymbol {
 
     public TokenList getReturnType() {
         return returnType;
+    }
+
+    public String toString(){
+        String s ="params: ";
+        for(AstParameter p: this.parameters){
+            s+=p.getType().name()+" ";
+            s+=p.getName()+"\n";
+        }
+        s+="return type: "+this.returnType.name();
+        return s;
+
     }
 }

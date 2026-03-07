@@ -96,7 +96,7 @@ public class TypeCheckerVisitor implements Visitor {
         TokenList topLevelOperator = node.getCondition().getToken().getToken();
         //ASSUMING ALL INT TYPES
         if(!token.logicOps.contains(topLevelOperator)){//check if top level operator gives a boolean output
-            this.errorHandler.add(":במעשה "+this.currentFuncName+" בעוד חייב לקבל ביוטי שמביא ערך בוליאני ");
+            this.errorHandler.add(":במעשה "+this.currentFuncName+" אם_יהיה חייב לקבל ביוטי שמביא ערך בוליאני ");
         }
         node.getTrueBlock().accept(this);
     }

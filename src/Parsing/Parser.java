@@ -25,10 +25,19 @@ public class Parser {
         this.errorHandler= new ParserErrorHandler();
         this.allStatements=new ArrayList<>();
         //////////////////////////////////////////////MODIFY THIS AND operators IN TOKEN CLASS TO ADD/REMOVE OPERATORS IN THE PARSER
-        this.BindingPowers.put(TokenList.OPERATOR_PLUS,new BindingPower(1.0,1.1));
-        this.BindingPowers.put(TokenList.OPERATOR_MINUS,new BindingPower(1.0,1.1));
-        this.BindingPowers.put(TokenList.OPERATOR_MULTIPLIE,new BindingPower(2.0,2.1));
-        this.BindingPowers.put(TokenList.OPERATOR_DEVIDES,new BindingPower(2.0,2.1));
+        //TODO add not
+        this.BindingPowers.put(TokenList.OPERATOR_OR,new BindingPower(1.0,1.1));
+        this.BindingPowers.put(TokenList.OPERATOR_AND,new BindingPower(1.0,1.1));
+
+        this.BindingPowers.put(TokenList.OPERATOR_EQUALS,new BindingPower(2.0,2.1));
+        this.BindingPowers.put(TokenList.OPERATOR_GREATERTHAN,new BindingPower(2.0,2.1));
+        this.BindingPowers.put(TokenList.OPERATOR_SMALLERTHAN,new BindingPower(2.0,2.1));
+
+        this.BindingPowers.put(TokenList.OPERATOR_PLUS,new BindingPower(3.0,3.1));
+        this.BindingPowers.put(TokenList.OPERATOR_MINUS,new BindingPower(3.0,3.1));
+
+        this.BindingPowers.put(TokenList.OPERATOR_MULTIPLIE,new BindingPower(4.0,4.1));
+        this.BindingPowers.put(TokenList.OPERATOR_DEVIDES,new BindingPower(4.0,4.1));
         //////////////////////////////////////////////MODIFY THIS AND operators IN TOKEN CLASS TO ADD/REMOVE OPERATORS IN THE PARSER
         if(this.Tokens.getFirst().getToken()!=TokenList.BASAD){
             System.err.println("!!!!!!!!!!!!!!!!!אנא הוסף בסד בתחילת התוכנית!!!!!!!!!!!!!!!!!");
@@ -70,6 +79,7 @@ public class Parser {
                 this.CurrentToken++;
             } catch(ParserException e){
                 System.err.println("זוהתה בעיה דיקדוקית! נכנס למצב פאניקה לגילוי חטאים נוספים");
+                this.next();
                 this.Sync();//jump to next valid statement
             }
         }
@@ -115,7 +125,7 @@ public class Parser {
                 return this.ParseReturnStatement();
             }
             default -> {
-                this.errorHandler.reportError("צדיק, זוהתה מילה לא נכונה אנא תקן!",this.getCurrentLine());
+                this.errorHandler.reportError("צדיק, זוהתה מילה ואלידית אך מקומה לא נכון!",this.getCurrentLine());
                 return null;
             }
         }

@@ -24,7 +24,11 @@ public class AstCodeBlock extends AstElement{
         return Statements;
     }
     public void print(String indent){
+        System.out.println("--------symbols--------");
+        this.scope.printSymbolTable();
+        System.out.println("--------symbols-end--------");
         PARSER_TESTING.printElements(indent,Statements);
+
     }
 
     @Override

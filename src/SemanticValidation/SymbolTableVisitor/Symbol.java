@@ -12,7 +12,9 @@ public class Symbol {
         this.offset = offset;
         this.type = type;
     }
-
+    public String toString(){
+        return this.type.name()+" "+this.name+" "+this.offset;
+    }
     public String getName() {
         return name;
     }
