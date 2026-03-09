@@ -124,6 +124,15 @@ public class Parser {
             case TokenList.KEYWORD_RETURN -> {
                 return this.ParseReturnStatement();
             }
+            case TokenList.PRINT_INT -> {
+                return this.ParsePrintIntStatement();
+            }
+            case TokenList.PRINT_STRING -> {
+                return this.ParsePrintStatement();
+            }
+            case TokenList.INPUT -> {
+                return this.ParseInputStatement();
+            }
             default -> {
                 this.errorHandler.reportError("צדיק, זוהתה מילה ואלידית אך מקומה לא נכון!",this.getCurrentLine());
                 return null;
@@ -149,6 +158,56 @@ public class Parser {
         next();
         AstExpression expression = ParseExpression();
         return new AstExpressionStatement(varName,expression);
+    }
+
+    private AstStatement ParsePrintStatement() throws ParserException,EofException{
+        /*
+        should get called on the first print token
+        returns the parsed ast structure
+        sets the current token to be the closing round bracket at the end of the statement
+         */
+        this.next();
+        if (this.getCurrentToken() !=TokenList.OPENING_ROUND_BRACKET){
+            this.errorHandler.reportError("ציפה ל ( אחרי ויאמר",this.getCurrentLine());
+        }
+        this.next();
+        if (this.getCurrentToken() !=TokenList.STRING_LITERAL){
+            this.errorHandler.reportError("ציפה לקבל מחרוזת לאחר בתוך ויאמר",this.getCurrentLine());
+        }
+        token string_literal = this.Tokens.get(this.CurrentToken);
+        this.next();
+        if (this.getCurrentToken() !=TokenList.CLOSING_ROUND_BRACKET){
+            this.errorHandler.reportError("ציפה ל ) אחרי ויאמר",this.getCurrentLine());
+        }
+        return new AstPrintStatement(string_literal);
+    }
+
+    private AstStatement ParsePrintIntStatement() throws ParserException,EofException{
+        /*
+        should get called on the first print token
+        returns the parsed ast structure
+        sets the current token to be the closing round bracket at the end of the statement
+         */
+        this.next();
+        if (this.getCurrentToken() !=TokenList.OPENING_ROUND_BRACKET){
+            this.errorHandler.reportError("ציפה ל ( אחרי ויאמר",this.getCurrentLine());
+        }
+        this.next();
+        AstExpression exp = ParseExpression();
+        this.next();
+        if (this.getCurrentToken() !=TokenList.CLOSING_ROUND_BRACKET){
+            this.errorHandler.reportError("ציפה ל ) אחרי ויאמר",this.getCurrentLine());
+        }
+        return new AstPrintIntStatement(exp);
+    }
+
+    private AstStatement ParseInputStatement()throws ParserException,EofException{
+        this.next();
+        if (this.getCurrentToken() !=TokenList.IDENTIFIER){
+            this.errorHandler.reportError("ציפה לשם משתנה לקריאת קלט",this.getCurrentLine());
+        }
+        token identifier = this.Tokens.get(this.CurrentToken);
+        return new AstInputStatement(identifier);
     }
 
     private AstStatement ParseFunctionDeclaration()throws ParserException,EofException{
@@ -317,6 +376,11 @@ public class Parser {
         if(this.getCurrentToken()==TokenList.IDENTIFIER&&this.peek().getToken()==TokenList.OPENING_ROUND_BRACKET){
             lhs= ParseFunctionExpression(false);
         }
+        else if(this.IsUnaryOp(this.getCurrentToken())){
+            token Unary_Token = this.Tokens.get(this.CurrentToken);
+            this.next();
+            lhs = new AstExpression(Unary_Token,PrattParse(1000.0),null);//create new ast expression node with a single branch
+        }
         else if(IsAtom()) {
             lhs = new AstExpression(Tokens.get(this.CurrentToken));
         }
@@ -413,6 +477,9 @@ public class Parser {
         return this.Tokens.get(this.CurrentToken).getLine();
     }
 
+    private boolean IsUnaryOp(TokenList t){
+        return token.Unary_Operators.contains(t);
+    }
     ///////////////////////////////////////////////////////////helper functions
 
 

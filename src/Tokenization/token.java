@@ -10,7 +10,12 @@ public class token {
             TokenList.OPERATOR_SMALLERTHAN,
             TokenList.OPERATOR_EQUALS,
             TokenList.OPERATOR_OR,
-            TokenList.OPERATOR_AND
+            TokenList.OPERATOR_AND,
+            TokenList.OPERATOR_NOT
+    );
+    public static Set<TokenList> Unary_Operators=Set.of(
+            TokenList.OPERATOR_MINUS,
+            TokenList.OPERATOR_NOT
     );
 
     public static Set<TokenList> operators=Set.of(

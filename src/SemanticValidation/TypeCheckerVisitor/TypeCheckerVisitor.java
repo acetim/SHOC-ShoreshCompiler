@@ -62,6 +62,9 @@ public class TypeCheckerVisitor implements Visitor {
         if (node.getReturnExpression()==null && this.currentFunc.getReturnType()!=TokenList.VOID){//if return is none but func isnt void
             this.errorHandler.add("צופה מאמן בתוך מעשה "+this.currentFuncName+" להחזיר ערך אך קיבל כלום ");
         }
+        if(node.getReturnExpression()!=null&&this.currentFunc.getReturnType()==TokenList.VOID){
+            this.errorHandler.add("צופה מאמן בתוך מעשה "+this.currentFuncName+" לא להחזיר כלום אך החזיר ערך ");
+        }
         if(node.getReturnExpression()!=null){
             node.getReturnExpression().accept(this);
         }
@@ -124,14 +127,20 @@ public class TypeCheckerVisitor implements Visitor {
         FunctionSymbol funcSymbol = this.globalSymbolTable.getFunc(node.getName());
         //ASSUMING ALL INT TYPES!!!
         if(!node.isVoidExpected()&&funcSymbol.getReturnType()==TokenList.VOID){//err if - expression not expects void but gets void
-            this.errorHandler.add(" במעשה"+this.currentFuncName+" נקרא המעשה "+node.getName()+"וצופה ממנו להחזיר ערך, אך מחזיר תהו ובהו ");
+            this.errorHandler.add(" במעשה "+this.currentFuncName+" נקרא המעשה "+node.getName()+" וצופה ממנו להחזיר ערך, אך מחזיר תהו ובהו ");
         }
         //ASSUMING ALL INT TYPES!!!
         if(funcSymbol.getParameters().size()!=node.getArguments().size()){
-            this.errorHandler.add(" במעשה"+this.currentFuncName+" נקרא המעשה "+node.getName()+"אך כמות הפרמטרים שקיבל אינה נכונה ");
+            this.errorHandler.add(" במעשה "+this.currentFuncName+" נקרא המעשה "+node.getName()+" אך כמות הפרמטרים שקיבל אינה נכונה ");
         }
+        for(AstExpression arg: node.getArguments()){
+            arg.accept(this);
+        }
+
         if(node.getLeft()!=null){node.getLeft().accept(this);}
         if(node.getRight()!=null){node.getRight().accept(this);}
+
+
     }
 
     @Override
@@ -147,6 +156,22 @@ public class TypeCheckerVisitor implements Visitor {
         for(AstStatement statement:node.getStatements()){
             statement.accept(this);
         }
+    }
+
+
+    @Override
+    public void VisitAstPrintIntStatement(AstPrintIntStatement node) {
+        node.getExpressionToPrint().accept(this);
+    }
+
+    @Override
+    public void VisitAstInputStatement(AstInputStatement node) {
+
+    }
+
+    @Override
+    public void VisitAstPrintStatement(AstPrintStatement node) {
+
     }
 
 }

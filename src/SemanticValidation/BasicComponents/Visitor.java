@@ -25,5 +25,11 @@ public interface Visitor {
 
     void VisitAstExpressionStatement(AstExpressionStatement node);
 
+    void VisitAstInputStatement(AstInputStatement node);
+
+    void VisitAstPrintStatement(AstPrintStatement node);
+
+    void VisitAstPrintIntStatement(AstPrintIntStatement node);
+
 
 }

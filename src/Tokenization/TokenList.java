@@ -6,6 +6,7 @@ public enum TokenList {//if u want to add a keyword,an operator or whatever stat
     IDENTIFIER,
     DECLARATION,//SPECIAL TOKEN - USED FOR AST ONLY
     OPERATOR_PLUS,
+    OPERATOR_NOT,
     OPERATOR_MINUS,
     OPERATOR_DEVIDES,
     OPERATOR_MULTIPLIE,
@@ -28,8 +29,10 @@ public enum TokenList {//if u want to add a keyword,an operator or whatever stat
     KEYWORD_WHILE,//add to Tokenization.tokenizer
     PRINT_STRING,
     PRINT_INT,
+    PRINT,
     BASAD,
-    STRING_LITERAL//add to Tokenization.tokenizer
+    STRING_LITERAL,//add to Tokenization.tokenizer
+    INPUT
 
 
 }

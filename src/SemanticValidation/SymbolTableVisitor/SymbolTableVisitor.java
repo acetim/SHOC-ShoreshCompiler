@@ -5,12 +5,19 @@ import SemanticValidation.BasicComponents.SemanticErrorHandler;
 import SemanticValidation.BasicComponents.TypeTable;
 import SemanticValidation.BasicComponents.Visitor;
 import Tokenization.TokenList;
+
+import java.util.HashMap;
+
 public class SymbolTableVisitor implements Visitor {
     private final SemanticErrorHandler errorHandler;
     private final GlobalSymbolTable globalSymbolTable;
     private SymbolTable currentScope;
     private int currentTotalStackOffset;
+    private final HashMap<String,String> stringPool;
+    private int stringCounter;
     public SymbolTableVisitor() {
+        this.stringCounter=0;
+        this.stringPool=new HashMap<>();
         this.errorHandler=new SemanticErrorHandler();
         this.currentTotalStackOffset=0;
         this.globalSymbolTable= new GlobalSymbolTable();
@@ -152,6 +159,9 @@ public class SymbolTableVisitor implements Visitor {
 
     @Override
     public void VisitAstIntDeclaration(AstIntDeclaration node) {
+            if(this.currentScope==this.globalSymbolTable.getGlobalScope()){
+                this.errorHandler.add(" משתנה "+node.getVarName()+" הוגדר מחוץ לפונקציה ");
+            }
             this.currentTotalStackOffset -= 4;//ASSUMING ALL INT TYPES
             Symbol symbol = new Symbol(node.getVarName(), currentTotalStackOffset, TokenList.KEYWORD_INT);
             this.currentScope.addToTable(symbol);
@@ -160,7 +170,31 @@ public class SymbolTableVisitor implements Visitor {
             }
     }
 
+    @Override
+    public void VisitAstInputStatement(AstInputStatement node) {
+        String varName =node.getIdentifier().getValue();
+        if(!this.currentScope.SymbolExists(varName)){
+            this.errorHandler.add(" אי אפשר לקלוט פלט למשתנה "+varName+" כי אינו מוגדר");
+        }
+    }
+
+    @Override
+    public void VisitAstPrintIntStatement(AstPrintIntStatement node) {
+        node.getExpressionToPrint().accept(this);
+    }
+
+    @Override
+    public void VisitAstPrintStatement(AstPrintStatement node) {
+        String str = node.getStringToPrint().getValue();
+        if(!this.stringPool.containsKey(str)){
+            this.stringPool.put(str,"ST"+this.stringCounter);
+            this.stringCounter++;
+        }
+    }
+
     public GlobalSymbolTable getGlobalSymbolTable() {
         return globalSymbolTable;
     }
+
+
 }

@@ -29,6 +29,7 @@ public class Tokenizer {
             Map.entry('>', TokenList.OPERATOR_GREATERTHAN)
     );
     private final static Map<String, TokenList> statements = Map.ofEntries(
+            Map.entry("לא", TokenList.OPERATOR_NOT),
             Map.entry("שלם", TokenList.KEYWORD_INT),
             Map.entry("ויהי_חושך", TokenList.KEYWORD_EXIT),
             Map.entry("אם_יהיה", TokenList.KEYWORD_IF),
@@ -43,18 +44,19 @@ public class Tokenizer {
             Map.entry("אמן",TokenList.KEYWORD_RETURN),
             Map.entry("בסד",TokenList.BASAD),
             Map.entry("וגם",TokenList.OPERATOR_AND),
-            Map.entry("או",TokenList.OPERATOR_OR)
+            Map.entry("או",TokenList.OPERATOR_OR),
+            Map.entry("שמע",TokenList.INPUT)
     );
     public Tokenizer(String filePath) {
         this.current=0;
         this.lineCount=0;
         this.file = new FileIO(filePath);//fileIO constructor exits program if file not found
         this.tokens=new ArrayList<>();
-        DayOfWeek localDay=LocalDate.now().getDayOfWeek();
-        if(localDay.getValue()==6){
-            System.err.println("!שבת היום!");
-            System.exit(1);
-        }
+//        DayOfWeek localDay=LocalDate.now().getDayOfWeek();
+//        if(localDay.getValue()==6){
+//            System.err.println("!שבת היום!");
+//            System.exit(1);
+//        }
     }
 
     public void Tokenize(){
