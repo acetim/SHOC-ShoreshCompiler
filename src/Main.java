@@ -5,23 +5,21 @@ import SemanticValidation.SymbolTableVisitor.SymbolTableVisitor;
 import SemanticValidation.TypeCheckerVisitor.TypeCheckerVisitor;
 import Tokenization.Tokenizer;
 
-import java.time.Duration;
-import java.time.Instant;
+
 import java.util.HashSet;
 import java.util.Set;
 
 
 public class Main {
-    public static Set<String> knownFlags = Set.of();
+    public static Set<String> knownFlags = Set.of("-no-shabat-chk");
     public static void main(String [] args) {
-
+        ////////////////////////////////////////////////////flags
         Set<String> flags=checkArgs(args);
         String input = args[args.length-1];
         String output = args[args.length-2];
-
-        Instant startTime = Instant.now();
+        boolean shabatCheck= !flags.contains("-no-shabat-chk");
         ////////////////////////////////////////////////////lex
-        Tokenizer t = new Tokenizer(input);
+        Tokenizer t = new Tokenizer(input,shabatCheck);
         t.Tokenize();
         ////////////////////////////////////////////////////parse
         Parser p = new Parser(t.getTokens());
@@ -34,12 +32,11 @@ public class Main {
         typeCheckerVisitor.visit(root);
 
         ////////////////////////////////////////////////////generate code
-        CodeGenerator c = new CodeGenerator(output+".s",symbolTableVisitor.getStringPool(),symbolTableVisitor.getGlobalSymbolTable());
-        c.generateCode(root);
 
-        Instant endTime = Instant.now();
-        Duration timeElapsed = Duration.between(startTime, endTime);
-        System.out.println("time taken: " + timeElapsed.toMillis() + " milliseconds");
+        CodeGenerator c = new CodeGenerator(output,symbolTableVisitor.getStringPool(),symbolTableVisitor.getGlobalSymbolTable(),shabatCheck);
+        c.generateCode(root);
+        System.out.println("\u001B[32m" + "\n\n!הקומפילציה הסתיימה בהצלחה!" + "\u001B[0m");
+        System.out.println(output+"\u001B[32m" + " כתב לתוך  " + "\u001B[0m");
 
     }
 

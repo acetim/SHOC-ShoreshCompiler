@@ -16,6 +16,7 @@ public class Tokenizer {
     private int current;//current char being processed
     private final ArrayList<token> tokens;
     private int lineCount;
+
     private final static Map<Character, TokenList> operators = Map.ofEntries(
             Map.entry('+', TokenList.OPERATOR_PLUS),
             Map.entry('-', TokenList.OPERATOR_MINUS),
@@ -47,15 +48,17 @@ public class Tokenizer {
             Map.entry("או",TokenList.OPERATOR_OR),
             Map.entry("שמע",TokenList.INPUT)
     );
-    public Tokenizer(String filePath) {
+    public Tokenizer(String filePath,boolean ShabatChk) {
         this.current=0;
         this.lineCount=0;
         this.file = new FileIO(filePath);//fileIO constructor exits program if file not found
         this.tokens=new ArrayList<>();
-        DayOfWeek localDay=LocalDate.now().getDayOfWeek();
-        if(localDay.getValue()==6){
-            System.err.println("!שבת היום!");
-            System.exit(1);
+        if(ShabatChk) {
+            DayOfWeek localDay = LocalDate.now().getDayOfWeek();
+            if (localDay.getValue() == 6) {
+                System.err.println("!שבת היום!");
+                //System.exit(1);
+            }
         }
     }
 

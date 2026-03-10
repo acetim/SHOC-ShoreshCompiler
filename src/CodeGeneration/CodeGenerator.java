@@ -8,6 +8,7 @@ import SemanticValidation.SymbolTableVisitor.SymbolTable;
 import java.util.HashMap;
 
 public class CodeGenerator implements Visitor {
+    private final boolean shabatCheck;
     private final codePrinter codePrinter;
     private final HashMap<String,String> StringPool;
     private final static char q = '"';
@@ -15,10 +16,11 @@ public class CodeGenerator implements Visitor {
     private final GlobalSymbolTable globalSymbolTable;
     private SymbolTable currentScope;
     private long controlFlowCounter = 0;
-    public CodeGenerator(String path,HashMap<String,String> stringPool,GlobalSymbolTable globalSymbolTable) {
+    public CodeGenerator(String path,HashMap<String,String> stringPool,GlobalSymbolTable globalSymbolTable,boolean shabatCheck) {
         this.codePrinter=new codePrinter(path);
         this.StringPool=stringPool;
         this.globalSymbolTable=globalSymbolTable;
+        this.shabatCheck=shabatCheck;
     }
 
     public void generateCode(AstCodeBlock root){
@@ -26,6 +28,9 @@ public class CodeGenerator implements Visitor {
         this.printStringPool();
         this.printInit();
         root.accept(this);
+        if(this.shabatCheck) {
+            this.printShabatCheck();
+        }
         this.printMain();
         codePrinter.closePrinter();
     }
@@ -44,12 +49,20 @@ public class CodeGenerator implements Visitor {
         );
     }
     private void printMain(){
+        codePrinter.write("""
+                    main:
+                        push rbp
+                        mov rbp,rsp
+                        
+                    """
+        );
+        if(this.shabatCheck){
+            codePrinter.write("""
+                        call SHABATCHK
+                    """);
+        }
         codePrinter.write(
-                    "main:\n"
-                    +indent+"push rbp\n"
-                    +indent+"mov rbp,rsp\n\n"
-
-                    +indent+"call "+this.globalSymbolTable.getFunc("בראשית").getFuncName()+"\n\n"
+                  indent+"call "+this.globalSymbolTable.getFunc("בראשית").getFuncName()+"\n\n"
                     +indent+"mov eax,0\n"
 
                     +indent+"mov rsp,rbp\n"
@@ -64,13 +77,53 @@ public class CodeGenerator implements Visitor {
         for (String key:this.StringPool.keySet()){
             codePrinter.write(indent+this.StringPool.get(key)+": .asciz "+q+key+q+'\n');
         }
-        codePrinter.write(indent+"int: .asciz "+q+"%d"+q);
+        codePrinter.write(indent+"int: .asciz "+q+"%d"+q+'\n');
+        codePrinter.write(indent+"shabat: .asciz "+q+"!שבת היום!\\n"+q+'\n');
         codePrinter.write("\n\n");
     }
     private void printFlush(){
         codePrinter.write("""
                     mov rdi,[rip+stdout]
                     call fflush
+                """);
+    }
+    private void printShabatCheck(){
+        codePrinter.write("""
+                SHABATCHK:
+                    push rbp
+                    mov rbp,rsp
+                    
+                    mov rax,201
+                    xor rdi,rdi
+                    syscall
+                    
+                    xor rdx,rdx
+                    mov rbx,86400
+                    div rbx
+                    
+                    add rax,5
+                    xor rdx,rdx
+                    mov rbx,7
+                    div rbx
+                    
+                    cmp rdx,0
+                    jne TZADIK
+                    
+                    lea rdi,[rip+shabat]
+                    xor eax,eax
+                    call printf
+                    mov rdi,[rip+stdout]
+                    call fflush
+                    
+                    mov rax,60
+                    mov rdi,1
+                    syscall
+
+                    TZADIK:
+                    mov rsp,rbp
+                    pop rbp
+                    ret
+                    
                 """);
     }
 
