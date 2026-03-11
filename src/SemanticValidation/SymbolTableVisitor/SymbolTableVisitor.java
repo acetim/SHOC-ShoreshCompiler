@@ -2,7 +2,6 @@ package SemanticValidation.SymbolTableVisitor;
 
 import Parsing.AstNodes.*;
 import SemanticValidation.BasicComponents.SemanticErrorHandler;
-import SemanticValidation.BasicComponents.TypeTable;
 import SemanticValidation.BasicComponents.Visitor;
 import Tokenization.TokenList;
 
@@ -45,15 +44,18 @@ public class SymbolTableVisitor implements Visitor {
             functionSymbol.addParam(p);
         }
         String funcName = node.getName();
+        if(this.globalSymbolTable.funcExists(funcName)){
+            this.errorHandler.add("מעשה: "+node.getName()+" הוגדר פעמיים בקוד! ");
+        }
         this.globalSymbolTable.defineFunc(functionSymbol,funcName);//add to global function registry
 
         //change scope to new function scope
         this.currentScope = new SymbolTable(currentScope);
-        int offset = 8;
+        int offset = 16;
 
         for(AstParameter p:node.getParameters()){
             currentScope.addToTable(new Symbol(p.getName(),offset,p.getType()));
-            offset += TypeTable.TypeTable.get(p.getType());
+            offset += 8;
         }
         /*when visiting codeblock we need to check for invalid variable use (undefiened vars)
         while also adding the new vars to the current symbol table
@@ -196,5 +198,7 @@ public class SymbolTableVisitor implements Visitor {
         return globalSymbolTable;
     }
 
-
+    public HashMap<String, String> getStringPool() {
+        return stringPool;
+    }
 }

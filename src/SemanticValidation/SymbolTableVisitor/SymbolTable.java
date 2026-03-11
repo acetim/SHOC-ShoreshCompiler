@@ -21,17 +21,27 @@ public class SymbolTable {
         return this.parent.SymbolExists(identifier);
     }
 
-    public SymbolTable getParent() {
-        return parent;
-    }
-
-    public void addToTable(Symbol s){
-        this.symbolTable.put(s.getName(),s);
-    }
-    public void printSymbolTable(){
-        for(Symbol s: this.symbolTable.values()){
-            System.out.println(s.toString());
+    public String getOffsetStr(String identifier){
+        if(this.symbolTable.containsKey(identifier)){
+            return this.symbolTable.get(identifier).getOffsetStr();
         }
+        if(this.parent==null){
+            throw new RuntimeException(identifier+" NOT FOUND");
+        }
+        return this.parent.getOffsetStr(identifier);
     }
 
+
+public SymbolTable getParent() {
+    return parent;
+}
+
+public void addToTable(Symbol s){
+    this.symbolTable.put(s.getName(),s);
+}
+public void printSymbolTable(){
+    for(Symbol s: this.symbolTable.values()){
+        System.out.println(s.toString());
+    }
+}
 }

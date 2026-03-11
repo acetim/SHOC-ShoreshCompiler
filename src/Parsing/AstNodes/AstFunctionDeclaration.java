@@ -38,6 +38,10 @@ public class AstFunctionDeclaration extends AstStatement{
         return parameters;
     }
 
+    public int getTotalStackOffset() {
+        return totalStackOffset;
+    }
+
     @Override
     public void accept(Visitor visitor) {
         visitor.VisitAstFunctionDeclaration(this);

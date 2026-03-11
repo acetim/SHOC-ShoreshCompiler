@@ -3,12 +3,14 @@ package SemanticValidation.SymbolTableVisitor;
 import java.util.HashMap;
 
 public class GlobalSymbolTable {
-    private SymbolTable globals;
-    private HashMap<String,FunctionSymbol> functions;//global function table
+    private int functionCounter;
+    private final SymbolTable globals;
+    private final HashMap<String,FunctionSymbol> functions;//global function table
 
     public GlobalSymbolTable() {
         this.globals = new SymbolTable(null);//no parent (root symbol table)
         this.functions = new HashMap<>();
+        this.functionCounter=0;
     }
     public boolean funcExists(String s){
         return this.functions.containsKey(s);
@@ -19,6 +21,8 @@ public class GlobalSymbolTable {
 
     public void defineFunc(FunctionSymbol fs,String name){
         this.functions.put(name,fs);
+        fs.setFuncName("FUNC"+this.functionCounter);
+        this.functionCounter++;
     }
 
 

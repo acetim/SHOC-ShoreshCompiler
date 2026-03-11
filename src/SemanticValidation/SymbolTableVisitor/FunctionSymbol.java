@@ -2,10 +2,16 @@ package SemanticValidation.SymbolTableVisitor;
 
 import java.util.ArrayList;
 import Parsing.AstNodes.AstParameter;
-import Parsing.AstNodes.AstStatement;
 import Tokenization.TokenList;
-
+/*
+funcs in asm will be named:
+FUNC0
+FUNC1
+FUNC2
+...
+ */
 public class FunctionSymbol {
+    private String funcName;
     private final ArrayList<AstParameter> parameters;
     private final TokenList returnType;
 
@@ -18,12 +24,20 @@ public class FunctionSymbol {
         this.parameters.add(a);
     }
 
+    public void setFuncName(String funcName) {
+        this.funcName = funcName;
+    }
+
     public ArrayList<AstParameter> getParameters() {
         return parameters;
     }
 
     public TokenList getReturnType() {
         return returnType;
+    }
+
+    public String getFuncName() {
+        return funcName;
     }
 
     public String toString(){
@@ -36,4 +50,5 @@ public class FunctionSymbol {
         return s;
 
     }
+
 }

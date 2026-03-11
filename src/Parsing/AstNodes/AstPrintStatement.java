@@ -14,7 +14,7 @@ public class AstPrintStatement extends AstStatement{
 
     @Override
     public void print(String indent) {
-        System.out.print(indent+"PRINT "+this.string.getValue());
+        System.out.println(indent+"PRINT "+this.string.getValue());
     }
 
     @Override

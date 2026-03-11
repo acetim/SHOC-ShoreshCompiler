@@ -17,6 +17,10 @@ public class token {
             TokenList.OPERATOR_MINUS,
             TokenList.OPERATOR_NOT
     );
+    public static Set<TokenList> atoms = Set.of(
+            TokenList.NUMBER,
+            TokenList.IDENTIFIER
+    );
 
     public static Set<TokenList> operators=Set.of(
             TokenList.OPERATOR_PLUS,

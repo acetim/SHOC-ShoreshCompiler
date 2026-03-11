@@ -14,14 +14,19 @@ public class TypeCheckerVisitor implements Visitor {
     private FunctionSymbol currentFunc;
     private final SemanticErrorHandler errorHandler;
     private String currentFuncName;
+    private boolean HasEntryPoint;
     public TypeCheckerVisitor(GlobalSymbolTable globalSymbolTable) {
         this.globalSymbolTable = globalSymbolTable;
         this.errorHandler= new SemanticErrorHandler();
         this.currentFunc=null;
         this.currentFuncName = "";
+        this.HasEntryPoint=false;
     }
     public void visit(AstCodeBlock root){
         root.accept(this);
+        if(!this.HasEntryPoint){
+            this.errorHandler.add("לא הוגדר מעשה כניסה לתוכנית - 'בראשית'  ");
+        }
         if(this.errorHandler.errorsPresent()){
             this.errorHandler.printAllErrors();
             System.exit(1);
@@ -40,9 +45,19 @@ public class TypeCheckerVisitor implements Visitor {
                 break;
             }
         }
+
         if(this.currentFunc.getReturnType()!= TokenList.VOID&&!funcHasReturn){
             //exit if func is not of void type and does not return
             this.errorHandler.add("המעשה "+node.getName()+" לא מחזיר כלום ");
+        }
+
+        if(node.getName().equals("בראשית")){
+            if(node.getParameters().isEmpty()){
+                this.HasEntryPoint=true;
+            }
+            else{
+                this.errorHandler.add("מעשה כניסה לתוכנית - 'בראשית' צריך להיות מוגדר ללא פרמטרים ");
+            }
         }
 
         node.getBody().accept(this);

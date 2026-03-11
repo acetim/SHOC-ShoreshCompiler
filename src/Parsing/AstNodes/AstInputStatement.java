@@ -14,7 +14,7 @@ public class AstInputStatement extends AstStatement{
 
     @Override
     public void print(String indent) {
-        System.out.print(indent+"INPUT "+this.identifier.getValue());
+        System.out.println(indent+"INPUT "+this.identifier.getValue());
     }
 
     @Override

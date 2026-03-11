@@ -20,6 +20,7 @@ public class AstPrintIntStatement extends AstStatement{
     public void print(String indent) {
         System.out.print(indent+"PRINT_INT ");
         this.expressionToPrint.print(indent);
+        System.out.println();
     }
 
     public AstExpression getExpressionToPrint() {
