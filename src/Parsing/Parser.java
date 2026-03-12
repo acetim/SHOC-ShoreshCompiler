@@ -448,8 +448,8 @@ public class Parser {
     }
 
     private boolean IsAtom(){
-        return (getCurrentToken() == TokenList.NUMBER || getCurrentToken() == TokenList.IDENTIFIER);
-        }
+        return token.atoms.contains(this.getCurrentToken());
+    }
 
     private TokenList getCurrentToken(){
         return this.Tokens.get(this.CurrentToken).getToken();

@@ -14,6 +14,7 @@ public class CodeGenerator implements Visitor {
     private final static String indent="    ";
     private final GlobalSymbolTable globalSymbolTable;
     private SymbolTable currentScope;
+    private long controlFlowCounter = 0;
     public CodeGenerator(String path,HashMap<String,String> stringPool,GlobalSymbolTable globalSymbolTable) {
         this.codePrinter=new codePrinter(path);
         this.StringPool=stringPool;
@@ -36,6 +37,8 @@ public class CodeGenerator implements Visitor {
                         .global main
                         .extern printf
                         .extern scanf
+                        .extern stdout
+                        .extern fflush
                         
                         """
         );
@@ -64,11 +67,27 @@ public class CodeGenerator implements Visitor {
         codePrinter.write(indent+"int: .asciz "+q+"%d"+q);
         codePrinter.write("\n\n");
     }
+    private void printFlush(){
+        codePrinter.write("""
+                    mov rdi,[rip+stdout]
+                    call fflush
+                """);
+    }
 
     @Override
     public void VisitAstIfStatement(AstIfStatement node) {
-
-    }//TODO
+        String endIf="IFEND"+this.controlFlowCounter;
+        node.getCondition().accept(this);
+        codePrinter.write(String.format("""
+                    test eax,1
+                    jz %s
+                """,endIf));
+        node.getTrueBlock().accept(this);
+        codePrinter.write(String.format("""
+                    %s:
+                """,endIf));
+        this.controlFlowCounter++;
+    }
 
     @Override
     public void VisitAstFunctionDeclaration(AstFunctionDeclaration node) {
@@ -77,7 +96,7 @@ public class CodeGenerator implements Visitor {
                 "\n"+asmFuncName+":\n"
                 +indent+"push rbp\n"
                 +indent+"mov rbp,rsp\n"
-                +indent+"sub rsp,"+node.getTotalStackOffset()+"\n\n");
+                +indent+"add rsp,"+node.getTotalStackOffset()+"\n\n");
 
         node.getBody().accept(this);
 
@@ -91,8 +110,21 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void VisitAstWhileStatement(AstWhileStatement node) {
-
-    }//TODO
+        String startWhile ="WHILESTART"+this.controlFlowCounter;
+        String endWhile="WHILEEND"+this.controlFlowCounter;
+        codePrinter.write(startWhile+":\n");
+        node.getCondition().accept(this);
+        codePrinter.write(String.format("""
+                    test eax,1
+                    jz %s
+                """,endWhile));
+        node.getCodeBlock().accept(this);
+        codePrinter.write(String.format("""
+                    jmp %s
+                    %s:
+                """,startWhile,endWhile));
+        this.controlFlowCounter++;
+    }
 
     @Override
     public void VisitAstCodeBlock(AstCodeBlock node) {
@@ -223,12 +255,24 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void VisitAstReturnStatement(AstReturnStatement node) {//TODO
-
+        node.getReturnExpression().accept(this);
+        codePrinter.write("""
+                    movsx rax,eax
+                    mov rsp,rbp
+                    pop rbp
+                    ret
+                """);
     }
 
     @Override
-    public void VisitAstIntDeclaration(AstIntDeclaration node) {//TODO
-
+    public void VisitAstIntDeclaration(AstIntDeclaration node) {
+        if(node.getExpression()!=null){
+            node.getExpression().accept(this);
+            String varOffset=this.currentScope.getOffsetStr(node.getVarName());
+            codePrinter.write(String.format("""
+                    mov dword ptr[rbp%s],eax
+                """,varOffset));
+        }
     }
 
     @Override
@@ -249,13 +293,23 @@ public class CodeGenerator implements Visitor {
     }
 
     @Override
-    public void VisitAstExpressionStatement(AstExpressionStatement node) {//TODO
-
+    public void VisitAstExpressionStatement(AstExpressionStatement node) {
+        node.getExpression().accept(this);
+        String varOffset=this.currentScope.getOffsetStr(node.getIdentifier());
+        codePrinter.write(String.format("""
+                    mov dword ptr[rbp%s],eax
+                """,varOffset));
     }
 
     @Override
-    public void VisitAstInputStatement(AstInputStatement node) {//TODO
-
+    public void VisitAstInputStatement(AstInputStatement node) {
+        String varOffset=this.currentScope.getOffsetStr(node.getIdentifier().getValue());
+        codePrinter.write(String.format("""
+                    xor eax,eax
+                    lea rdi,[rip+int]
+                    lea rsi,[rbp%s]
+                    call scanf
+                """,varOffset));
     }
 
     @Override
@@ -266,6 +320,7 @@ public class CodeGenerator implements Visitor {
                 +indent+"xor eax,eax\n"
                 +indent+"call printf\n"
         );
+        printFlush();
     }
 
     @Override
@@ -279,5 +334,6 @@ public class CodeGenerator implements Visitor {
                     call printf
                 
                 """);
+        printFlush();
     }
 }

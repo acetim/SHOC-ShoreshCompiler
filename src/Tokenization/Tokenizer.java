@@ -52,11 +52,11 @@ public class Tokenizer {
         this.lineCount=0;
         this.file = new FileIO(filePath);//fileIO constructor exits program if file not found
         this.tokens=new ArrayList<>();
-//        DayOfWeek localDay=LocalDate.now().getDayOfWeek();
-//        if(localDay.getValue()==6){
-//            System.err.println("!שבת היום!");
-//            System.exit(1);
-//        }
+        DayOfWeek localDay=LocalDate.now().getDayOfWeek();
+        if(localDay.getValue()==6){
+            System.err.println("!שבת היום!");
+            System.exit(1);
+        }
     }
 
     public void Tokenize(){
