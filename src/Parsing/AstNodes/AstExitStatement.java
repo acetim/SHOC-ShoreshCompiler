@@ -4,7 +4,7 @@ import SemanticValidation.BasicComponents.Visitor;
 import Tokenization.TokenList;
 
 public class AstExitStatement extends AstStatement{
-    private AstExpression ExitCode;
+    private final AstExpression ExitCode;
 
     public AstExitStatement( AstExpression exitCode) {
         super(TokenList.KEYWORD_EXIT);
@@ -15,9 +15,6 @@ public class AstExitStatement extends AstStatement{
         return ExitCode;
     }
 
-    public void setExitCode(AstExpression exitCode) {
-        ExitCode = exitCode;
-    }
 
     @Override
     public void print(String indent) {

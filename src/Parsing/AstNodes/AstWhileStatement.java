@@ -4,8 +4,8 @@ import SemanticValidation.BasicComponents.Visitor;
 import Tokenization.TokenList;
 
 public class AstWhileStatement extends AstStatement{
-    private AstExpression condition;
-    private AstCodeBlock codeBlock;
+    private final AstExpression condition;
+    private final AstCodeBlock codeBlock;
 
     public AstWhileStatement(AstExpression condition, AstCodeBlock codeBlock) {
         super(TokenList.KEYWORD_WHILE);
@@ -17,16 +17,8 @@ public class AstWhileStatement extends AstStatement{
         return condition;
     }
 
-    public void setCondition(AstExpression condition) {
-        this.condition = condition;
-    }
-
     public AstCodeBlock getCodeBlock() {
         return codeBlock;
-    }
-
-    public void setCodeBlock(AstCodeBlock codeBlock) {
-        this.codeBlock = codeBlock;
     }
 
     @Override

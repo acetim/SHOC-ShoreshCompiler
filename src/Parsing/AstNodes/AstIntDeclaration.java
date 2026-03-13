@@ -3,7 +3,7 @@ package Parsing.AstNodes;
 import SemanticValidation.BasicComponents.Visitor;
 
 public class AstIntDeclaration extends AstVarDeclaration {
-    private AstExpression Expression;
+    private final AstExpression Expression;
 
     public AstIntDeclaration(String identifier, int sizeInBytes, AstExpression expression) {
         super(identifier, sizeInBytes);
@@ -14,9 +14,6 @@ public class AstIntDeclaration extends AstVarDeclaration {
         return Expression;
     }
 
-    public void setExpression(AstExpression expression) {
-        Expression = expression;
-    }
 
     @Override
     public void accept(Visitor visitor) {

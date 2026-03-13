@@ -1,8 +1,8 @@
 package Parsing;
 
 public class BindingPower {
-    private Double left;
-    private Double right;
+    private final Double left;
+    private final Double right;
 
     public BindingPower(Double left, Double right) {
         this.right = right;
@@ -13,15 +13,7 @@ public class BindingPower {
         return left;
     }
 
-    public void setLeft(Double left) {
-        this.left = left;
-    }
-
     public Double getRight() {
         return right;
-    }
-
-    public void setRight(Double right) {
-        this.right = right;
     }
 }
