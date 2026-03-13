@@ -29,6 +29,7 @@ public class SymbolTableVisitor implements Visitor {
             this.errorHandler.printAllErrors();
             System.exit(1);
         }
+        System.out.println("\u001B[32m" + "בדיקה סמנטית 1 הסתיימה בהצלחה" + "\u001B[0m");
     }
 
 

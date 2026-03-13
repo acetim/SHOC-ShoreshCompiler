@@ -92,11 +92,12 @@ public class CodeGenerator implements Visitor {
     @Override
     public void VisitAstFunctionDeclaration(AstFunctionDeclaration node) {
         String asmFuncName = this.globalSymbolTable.getFunc(node.getName()).getFuncName();
+        int alignedTotalOffset=((node.getTotalStackOffset()*-1)+15)& ~15;
         codePrinter.write(
                 "\n"+asmFuncName+":\n"
                 +indent+"push rbp\n"
                 +indent+"mov rbp,rsp\n"
-                +indent+"add rsp,"+node.getTotalStackOffset()+"\n\n");
+                +indent+"sub rsp,"+alignedTotalOffset+"\n\n");
 
         node.getBody().accept(this);
 
@@ -112,7 +113,7 @@ public class CodeGenerator implements Visitor {
     public void VisitAstWhileStatement(AstWhileStatement node) {
         String startWhile ="WHILESTART"+this.controlFlowCounter;
         String endWhile="WHILEEND"+this.controlFlowCounter;
-        codePrinter.write(startWhile+":\n");
+        codePrinter.write(indent+startWhile+":\n");
         node.getCondition().accept(this);
         codePrinter.write(String.format("""
                     test eax,1
@@ -257,10 +258,12 @@ public class CodeGenerator implements Visitor {
     public void VisitAstReturnStatement(AstReturnStatement node) {//TODO
         node.getReturnExpression().accept(this);
         codePrinter.write("""
+                    
                     movsx rax,eax
                     mov rsp,rbp
                     pop rbp
                     ret
+                    
                 """);
     }
 
@@ -305,10 +308,12 @@ public class CodeGenerator implements Visitor {
     public void VisitAstInputStatement(AstInputStatement node) {
         String varOffset=this.currentScope.getOffsetStr(node.getIdentifier().getValue());
         codePrinter.write(String.format("""
+                    
                     xor eax,eax
                     lea rdi,[rip+int]
                     lea rsi,[rbp%s]
                     call scanf
+                    
                 """,varOffset));
     }
 
@@ -316,7 +321,7 @@ public class CodeGenerator implements Visitor {
     public void VisitAstPrintStatement(AstPrintStatement node) {
         String asmStr = this.StringPool.get(node.getStringToPrint().getValue());
         codePrinter.write(
-                indent+"lea rdi,[rip+"+asmStr+"]\n"
+                "\n"+indent+"lea rdi,[rip+"+asmStr+"]\n"
                 +indent+"xor eax,eax\n"
                 +indent+"call printf\n"
         );
@@ -327,6 +332,7 @@ public class CodeGenerator implements Visitor {
     public void VisitAstPrintIntStatement(AstPrintIntStatement node) {
         node.getExpressionToPrint().accept(this);
         codePrinter.write("""
+                    
                     movsx rsi,eax
                     lea rdi,[rip+int]
                     xor eax,eax

@@ -36,6 +36,12 @@ public class token {
     //MODIFY THIS TO ADD OPERATORS TO PRATT PARSE^^^^^^
     //TODO UPDATE THIS VVVV TO BETTER DETECT SYNTAX ERRS
     public static Set<TokenList> statements=Set.of(
+            TokenList.FUNCTION_CALL,
+            TokenList.FUNCTION_DECLERATION,
+            TokenList.KEYWORD_RETURN,
+            TokenList.PRINT_STRING,
+            TokenList.PRINT_INT,
+            TokenList.INPUT,
             TokenList.KEYWORD_INT,
             TokenList.KEYWORD_EXIT,
             TokenList.KEYWORD_IF,

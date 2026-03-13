@@ -31,6 +31,7 @@ public class TypeCheckerVisitor implements Visitor {
             this.errorHandler.printAllErrors();
             System.exit(1);
         }
+        System.out.println("\u001B[32m" + "בדיקה סמנטית 2 הסתיימה בהצלחה" + "\u001B[0m");
     }
 
     @Override
