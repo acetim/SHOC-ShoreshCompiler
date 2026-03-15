@@ -1,7 +1,7 @@
 
 # SHOC-Shoresh Compiler- a biblical hebrew language compiler
 
-A brief description of what this project does and who it's for
+
 
 ![shoresh](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZW85OHE4djV1ZzF2ZDVpZHBvNDE2MWlzejZhbHZqNmZxN2k0MnBqeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2qqAyB5sY1PKxoDTTc/giphy.gif)
 
