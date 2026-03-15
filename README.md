@@ -63,6 +63,8 @@ INTEGER DECLERATION:
 
 
 ![int](https://i.postimg.cc/76mMXfsG/Screenshot-2026-03-16-010129.png)
+
+
 you can initilize it with a number and you can leave it blank 
 make sure you pay attention to the scopes!! an integer defined inside a code block (e.g if or while blocks) wouldnt be accessible out of that block!
 ## 
