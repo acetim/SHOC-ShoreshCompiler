@@ -38,21 +38,41 @@ you should always start your program with a בסד statement
 
 your entry point function should be called בראשית ,take no args and return void(תהו_ובהו)
 
+
+
+
+
+
+
+
+
+## 
 FUNCTION DECLERATION:
+
+
 ![func](https://i.postimg.cc/651bt1hP/Screenshot-2026-03-16-005809.png)
+
+
  use the ויברא keyword to start func decleration then specify return value (currently shoresh has only int (שלם) and void(תהו_ובהו) types )
 then specify your func name and its argument in the parentheses 
 
 now open a new code block using ויעש and then when you want to close it use ויתם (same goes for if and while)
-
+## 
 
 INTEGER DECLERATION:
+
+
 ![int](https://i.postimg.cc/76mMXfsG/Screenshot-2026-03-16-010129.png)
 you can initilize it with a number and you can leave it blank 
 make sure you pay attention to the scopes!! an integer defined inside a code block (e.g if or while blocks) wouldnt be accessible out of that block!
-
+## 
 BASIC OPERATIONS:
+
+
 ![ops](https://i.postimg.cc/ZYXjQyYD/Screenshot-2026-03-16-010525.png)
+
+
+
 available logic operations:  
 or-או   
 not-לא  
@@ -61,10 +81,17 @@ and- וגם
 other available operations : + - * / = > <   
 you can also use parentheses in your expressions   
 !!!make sure you end EACH INDIVIDUAL EXPRESSION WITH ;!!!
+## 
+
 
 
 IF AND WHILE:
+
+
 ![controlflow](https://i.postimg.cc/TPrXyX72/Screenshot-2026-03-16-011308.png)
+
+
+
 use בעוד  for while and אם_יהיה for if statements  
 make sure your statement is a boolean value!
 
