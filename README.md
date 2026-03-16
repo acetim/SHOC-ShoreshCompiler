@@ -57,6 +57,9 @@ FUNCTION DECLERATION:
 then specify your func name and its argument in the parentheses 
 
 now open a new code block using ויעש and then when you want to close it use ויתם (same goes for if and while)
+
+
+to return a value (or just return from a void func) use the keyword אמן and then your return value + a semicolon (or just אמן and a semicolon if returning no value)
 ## 
 
 INTEGER DECLERATION:
@@ -98,4 +101,35 @@ use בעוד  for while and אם_יהיה for if statements
 make sure your statement is a boolean value!
 
 
-doc not finished yet, will finish soon.
+## 
+
+FUNCTION CALLING
+
+
+
+![func](https://i.postimg.cc/C1vSJWRJ/Screenshot-2026-03-16-214039.png)
+
+
+to call a void returning func use ויקרא
+
+
+to call a value returning func just call it inside an expression
+
+make sure all arguments that are passed to the func end in a semi colon; remember - they are all individual expressions and as i mentioned-EACH INDIVIDUAL EXPRESSION SHOULD END IN A SEMICOLON
+
+
+## 
+OTHER FUNCTIONS
+
+
+![imgf](https://i.postimg.cc/nrRKFcCD/Screenshot-2026-03-16-214912.png)
+
+
+to print an expression: ויאמר_שלם
+
+to print a string:ויאמר
+
+to use SYSEXIT : ויהי_חושך with your exit code
+## TBC!!
+
+probably gonna do arm64 compilation and add arrays
