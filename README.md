@@ -98,4 +98,4 @@ use בעוד  for while and אם_יהיה for if statements
 make sure your statement is a boolean value!
 
 
-MORE COMNG SOON...
+doc not finished yet, will finish soon.
