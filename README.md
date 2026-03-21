@@ -26,6 +26,11 @@ to assemble and link this file to an executable:
 gcc -o <your executable name> <the compiled .s file>
 ```
 
+use the -no-shabat-chk flag to bypass shabat check func in the compiler code & to not add the function that runs at the start of each program (thats compiled with shoc) that prevents the user from running it in sabbath 
+```bash
+shoc -no-shabat-chk <output .s file> <input .sho file>
+```
+
 
 ## how to write in shoresh?
 
