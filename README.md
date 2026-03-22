@@ -13,6 +13,8 @@ Install shoc with npm
 ```bash
   sudo npm install -g shoc-shoresh-compiler
 ```
+
+i also recommend installing the complementary notepad++  [UDL pack](https://github.com/acetim/shoresh_NPP_config) to edit .sho files and code with syntax highlighting and logical mirroring when using RTL
     
 ## Usage
 
@@ -35,9 +37,9 @@ shoc -no-shabat-chk <output .s file> <input .sho file>
 
 ## how to write in shoresh?
 
-i will use this fibonnaci program as an example:
+i will use this fibonnacci program as an example:
 
-this is the fibonnaci func:
+this is the [fibbonacci func](https://github.com/acetim/fib-in-Shoresh/blob/main/fib.sho):
 ![img](https://i.postimg.cc/D04F5bfT/Screenshot-2026-03-16-004734.png)
 
 you should always start your program with a בסד statement
