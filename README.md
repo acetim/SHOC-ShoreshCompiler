@@ -5,6 +5,7 @@
 
 ![shoresh](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZW85OHE4djV1ZzF2ZDVpZHBvNDE2MWlzejZhbHZqNmZxN2k0MnBqeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2qqAyB5sY1PKxoDTTc/giphy.gif)
 
+## have you ever asked yourself- why cant i code in ancient biblical hebrew?????????? 😭😭😭😭😭😭 NOW YOU CAN!!!!!!!!!!😎😎😎
 ## Installation
 
 Install shoc with npm
