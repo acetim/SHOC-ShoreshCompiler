@@ -24,14 +24,14 @@ public enum TokenList {//if u want to add a keyword,an operator or whatever stat
     KEYWORD_IF,
     OPENING_BRACKET,
     CLOSING_BRACKET,
-    OPENING_ROUND_BRACKET,//add to Tokenization.tokenizer
-    CLOSING_ROUND_BRACKET,//add to Tokenization.tokenizer
-    KEYWORD_WHILE,//add to Tokenization.tokenizer
+    OPENING_ROUND_BRACKET,//add to main.java.Tokenization.tokenizer
+    CLOSING_ROUND_BRACKET,//add to main.java.Tokenization.tokenizer
+    KEYWORD_WHILE,//add to main.java.Tokenization.tokenizer
     PRINT_STRING,
     PRINT_INT,
     PRINT,
     BASAD,
-    STRING_LITERAL,//add to Tokenization.tokenizer
+    STRING_LITERAL,//add to main.java.Tokenization.tokenizer
     INPUT
 
 

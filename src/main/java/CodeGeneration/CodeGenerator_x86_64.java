@@ -3,24 +3,15 @@ package CodeGeneration;
 import Parsing.AstNodes.*;
 import SemanticValidation.BasicComponents.Visitor;
 import SemanticValidation.SymbolTableVisitor.GlobalSymbolTable;
-import SemanticValidation.SymbolTableVisitor.SymbolTable;
+
 
 import java.util.HashMap;
 
-public class CodeGenerator implements Visitor {
-    private final boolean shabatCheck;
-    private final codePrinter codePrinter;
-    private final HashMap<String,String> StringPool;
-    private final static char q = '"';
-    private final static String indent="    ";
-    private final GlobalSymbolTable globalSymbolTable;
-    private SymbolTable currentScope;
-    private long controlFlowCounter = 0;
-    public CodeGenerator(String path,HashMap<String,String> stringPool,GlobalSymbolTable globalSymbolTable,boolean shabatCheck) {
-        this.codePrinter=new codePrinter(path);
-        this.StringPool=stringPool;
-        this.globalSymbolTable=globalSymbolTable;
-        this.shabatCheck=shabatCheck;
+
+public class CodeGenerator_x86_64 extends CodeGenerator implements Visitor {
+
+    public CodeGenerator_x86_64(String path,HashMap<String,String> stringPool,GlobalSymbolTable globalSymbolTable,boolean shabatCheck) {
+        super(path,stringPool, globalSymbolTable,shabatCheck);
     }
 
     public void generateCode(AstCodeBlock root){
@@ -32,9 +23,11 @@ public class CodeGenerator implements Visitor {
             this.printShabatCheck();
         }
         this.printMain();
+        codePrinter.write(".section .note.GNU-stack,\"\",@progbits\n");
         codePrinter.closePrinter();
     }
-    private void printInit(){
+    //////////////////////////////////boilerplate
+    protected void printInit(){
         codePrinter.write(
                 """
                         .section .text
@@ -48,7 +41,7 @@ public class CodeGenerator implements Visitor {
                         """
         );
     }
-    private void printMain(){
+    protected void printMain(){
         codePrinter.write("""
                     main:
                         push rbp
@@ -72,7 +65,7 @@ public class CodeGenerator implements Visitor {
 
         );
     }
-    private void printStringPool(){
+    protected void printStringPool(){
         codePrinter.write(".section .rodata\n");
         for (String key:this.StringPool.keySet()){
             codePrinter.write(indent+this.StringPool.get(key)+": .asciz "+q+key+q+'\n');
@@ -81,13 +74,13 @@ public class CodeGenerator implements Visitor {
         codePrinter.write(indent+"shabat: .asciz "+q+"!שבת היום!\\n"+q+'\n');
         codePrinter.write("\n\n");
     }
-    private void printFlush(){
+    protected void printFlush(){
         codePrinter.write("""
                     mov rdi,[rip+stdout]
                     call fflush
                 """);
     }
-    private void printShabatCheck(){
+    protected void printShabatCheck(){
         codePrinter.write("""
                 SHABATCHK:
                     push rbp
@@ -126,7 +119,7 @@ public class CodeGenerator implements Visitor {
                     
                 """);
     }
-
+    //////////////////////////////////end-boilerplate
     @Override
     public void VisitAstIfStatement(AstIfStatement node) {
         String endIf="IFEND"+this.controlFlowCounter;
@@ -153,11 +146,13 @@ public class CodeGenerator implements Visitor {
                 +indent+"sub rsp,"+alignedTotalOffset+"\n\n");
 
         node.getBody().accept(this);
-
-        codePrinter.write(
-                '\n'+indent+"mov rsp,rbp\n"
-                +indent+"pop rbp\n"
-                +indent+"ret\n");
+        codePrinter.write("""
+                    
+                    mov rsp,rbp
+                    pop rbp
+                    ret
+                
+                """);
 
 
     }
@@ -253,6 +248,7 @@ public class CodeGenerator implements Visitor {
                 //then divide
                 codePrinter.write("""
                             xchg eax,ebx
+                            cdq
                             idiv ebx
                         """);
             }
@@ -308,8 +304,8 @@ public class CodeGenerator implements Visitor {
     }
 
     @Override
-    public void VisitAstReturnStatement(AstReturnStatement node) {//TODO
-        node.getReturnExpression().accept(this);
+    public void VisitAstReturnStatement(AstReturnStatement node) {
+        if (node.getReturnExpression()!=null){node.getReturnExpression().accept(this);}
         codePrinter.write("""
                     
                     movsx rax,eax

@@ -1,8 +1,6 @@
 package Tokenization;
 import Exceptions.TokenizerException;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
 /*
@@ -48,18 +46,11 @@ public class Tokenizer {
             Map.entry("או",TokenList.OPERATOR_OR),
             Map.entry("שמע",TokenList.INPUT)
     );
-    public Tokenizer(String filePath,boolean ShabatChk) {
+    public Tokenizer(String filePath) {
         this.current=0;
         this.lineCount=0;
         this.file = new FileIO(filePath);//fileIO constructor exits program if file not found
         this.tokens=new ArrayList<>();
-        if(ShabatChk) {
-            DayOfWeek localDay = LocalDate.now().getDayOfWeek();
-            if (localDay.getValue() == 6) {
-                System.err.println("!שבת היום!");
-                //System.exit(1);
-            }
-        }
     }
 
     public void Tokenize(){

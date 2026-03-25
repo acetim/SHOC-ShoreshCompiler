@@ -78,7 +78,6 @@ public class Parser {
                 Statements.add(ParseStatement());
                 this.CurrentToken++;
             } catch(ParserException e){
-                System.err.println("זוהתה בעיה דיקדוקית! נכנס למצב פאניקה לגילוי חטאים נוספים");
                 this.next();
                 this.Sync();//jump to next valid statement
             }
@@ -134,7 +133,7 @@ public class Parser {
                 return this.ParseInputStatement();
             }
             default -> {
-                this.errorHandler.reportError("צדיק, זוהתה מילה ואלידית אך מקומה לא נכון!",this.getCurrentLine());
+                this.errorHandler.reportError(" צדיק, זוהתה מילה ואלידית אך מקומה לא נכון! ",this.getCurrentLine());
                 return null;
             }
         }
@@ -403,7 +402,7 @@ public class Parser {
                 break;
             }
 
-            if(!isOp(this.peek().getToken())) {//if wrong Tokenization.token is detected throw error
+            if(!isOp(this.peek().getToken())) {//if wrong main.java.Tokenization.token is detected throw error
                 this.errorHandler.reportError("צופתה פעולה בביטוי",this.getCurrentLine());
             }
 
@@ -469,7 +468,7 @@ public class Parser {
     private void next() throws EofException{
         this.CurrentToken++;
         if(this.CurrentToken>=this.Tokens.size()){
-            throw new EofException("בעיה: הגעה לסוף הקובץ");
+            throw new EofException("");
         }
     }
 
