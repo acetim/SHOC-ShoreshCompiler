@@ -100,7 +100,7 @@ public class CodeGenerator_x86_64 extends CodeGenerator implements Visitor {
                     div rbx
                     
                     cmp rdx,0
-                    jne TZADIK
+                    jne .L_TZADIK
                     
                     lea rdi,[rip+shabat]
                     xor eax,eax
@@ -112,7 +112,7 @@ public class CodeGenerator_x86_64 extends CodeGenerator implements Visitor {
                     mov rdi,1
                     syscall
 
-                    TZADIK:
+                    .L_TZADIK:
                     mov rsp,rbp
                     pop rbp
                     ret
@@ -122,7 +122,7 @@ public class CodeGenerator_x86_64 extends CodeGenerator implements Visitor {
     //////////////////////////////////end-boilerplate
     @Override
     public void VisitAstIfStatement(AstIfStatement node) {
-        String endIf="IFEND"+this.controlFlowCounter;
+        String endIf=".L_IFEND"+this.controlFlowCounter;
         node.getCondition().accept(this);
         codePrinter.write(String.format("""
                     test eax,1
@@ -159,8 +159,8 @@ public class CodeGenerator_x86_64 extends CodeGenerator implements Visitor {
 
     @Override
     public void VisitAstWhileStatement(AstWhileStatement node) {
-        String startWhile ="WHILESTART"+this.controlFlowCounter;
-        String endWhile="WHILEEND"+this.controlFlowCounter;
+        String startWhile =".L_WHILESTART"+this.controlFlowCounter;
+        String endWhile=".L_WHILEEND"+this.controlFlowCounter;
         codePrinter.write(indent+startWhile+":\n");
         node.getCondition().accept(this);
         codePrinter.write(String.format("""

@@ -45,7 +45,7 @@ public class CodeGenerator_aarch64 extends CodeGenerator implements Visitor {
         String asmEntry = this.globalSymbolTable.getFunc("בראשית").getFuncName();
         codePrinter.write("""
                 main:
-                    stp x29, x30, [sp,#-16]
+                    stp x29, x30, [sp,#-16]!
                     mov x29, sp
                 """);
         if(this.shabatCheck){
@@ -77,10 +77,10 @@ public class CodeGenerator_aarch64 extends CodeGenerator implements Visitor {
     @Override
     protected void printFlush() {
         codePrinter.write("""
-                   adrp x0, :got:stdout
-                   ldr x0, [x0, :lo12:stdout]
-                   ldr x0, [x0]
-                   bl fflush 
+                    adrp x0, :got:stdout
+                    ldr x0, [x0, :got_lo12:stdout]
+                    ldr x0, [x0]
+                    bl fflush 
                 """);
     }
     @Override
@@ -105,20 +105,20 @@ public class CodeGenerator_aarch64 extends CodeGenerator implements Visitor {
                     msub x0, x2, x1, x0
                     
                     cmp x0, #0
-                    b.ne TZADIK
+                    b.ne .L_TZADIK
                     
                     adrp x0, shabat
                     add x0, x0, :lo12:shabat
                     bl printf
                     adrp x0, :got:stdout
-                    ldr x0, [x0, :lo12:stdout]
+                    ldr x0, [x0, :got_lo12:stdout]
                     ldr x0, [x0]
                     bl fflush
                     mov x0, #1
                     mov x8, #93
                     svc #0                    
                     
-                    TZADIK:
+                    .L_TZADIK:
                     mov sp, x29
                     ldp x29, x30, [sp], #16
                     ret
@@ -128,7 +128,7 @@ public class CodeGenerator_aarch64 extends CodeGenerator implements Visitor {
 
     @Override
     public void VisitAstIfStatement(AstIfStatement node) {
-        String endIf="IFEND"+this.controlFlowCounter;
+        String endIf=".L_IFEND"+this.controlFlowCounter;
         node.getCondition().accept(this);
         codePrinter.write(String.format("""
                     tst w0, #1
@@ -166,8 +166,8 @@ public class CodeGenerator_aarch64 extends CodeGenerator implements Visitor {
 
     @Override
     public void VisitAstWhileStatement(AstWhileStatement node) {
-        String startWhile ="WHILESTART"+this.controlFlowCounter;
-        String endWhile="WHILEEND"+this.controlFlowCounter;
+        String startWhile =".L_WHILESTART"+this.controlFlowCounter;
+        String endWhile=".L_WHILEEND"+this.controlFlowCounter;
         codePrinter.write(indent+startWhile+":\n");
         node.getCondition().accept(this);
         codePrinter.write(String.format("""
@@ -276,20 +276,20 @@ public class CodeGenerator_aarch64 extends CodeGenerator implements Visitor {
             }
             case OPERATOR_EQUALS -> {
                 codePrinter.write("""
-                            cmp w0, w1
+                            cmp w1, w0
                             cset w0, eq
                         """);
             }
             case OPERATOR_GREATERTHAN -> {
                 //cmp ebx than eax beacuse left->right
                 codePrinter.write("""
-                            cmp w0, w1
+                            cmp w1, w0
                             cset w0, gt
                         """);
             }
             case OPERATOR_SMALLERTHAN -> {
                 codePrinter.write("""
-                            cmp w0, w1
+                            cmp w1, w0
                             cset w0, lt
                         """);
             }
@@ -326,7 +326,7 @@ public class CodeGenerator_aarch64 extends CodeGenerator implements Visitor {
         codePrinter.write("""
                     mov sp, x29
                     ldp x29, x30, [sp], #16
-                    
+                    ret
                 """);
     }
 
@@ -355,7 +355,7 @@ public class CodeGenerator_aarch64 extends CodeGenerator implements Visitor {
         //push args
         for (int i = 0; i < totalArgs; i++) {
             args.get(i).accept(this);
-            codePrinter.write(String.format("   str w0, [sp, #%d]\n", i * 8));
+            codePrinter.write(String.format("    str w0, [sp, #%d]\n", i * 8));
         }
 
         codePrinter.write(String.format("""
