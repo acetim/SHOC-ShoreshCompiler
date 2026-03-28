@@ -34,6 +34,11 @@ use the -no-shabat-chk flag to bypass shabat check func (prevents you from compi
 shoc -no-shabat-chk <output .s file> <input .sho file>
 ```
 
+use the -arm64 flag to cross-compile to AArch64:
+```bash
+shoc -arm64 <output .s file> <input .sho file>
+```
+
 
 ## how to write in shoresh?
 
