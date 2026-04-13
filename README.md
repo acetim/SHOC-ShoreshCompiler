@@ -145,4 +145,5 @@ to print a string:ויאמר
 to use SYSEXIT : ויהי_חושך with your exit code
 ## TBC!!
 
-probably gonna add arrays
+probably gonna add arrays and oop sometime
+
